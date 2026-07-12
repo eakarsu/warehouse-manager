@@ -1,0 +1,33 @@
+name: Feature request
+description: Propose a source-backed application improvement.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: execution
+    attributes:
+      label: Execution model
+      options:
+        - Deterministic non-AI feature
+        - Explicit user-triggered AI feature
+        - Not yet determined
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Source evidence and acceptance criteria
+    validations:
+      required: true

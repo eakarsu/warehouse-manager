@@ -1,0 +1,30 @@
+{
+  "id": "warehouse-manager",
+  "title": "Warehouse Manager App",
+  "industry": "Transportation & Logistics",
+  "industryId": "transportation-logistics",
+  "specialization": "Warehouse Manager",
+  "sourcePlatformGroup": "transport-logistics-platform",
+  "sources": [
+    "AIAerospaceMRO",
+    "AIFreightPricingAgent",
+    "AISatelliteImageryAnalyzer",
+    "AIWarehouseManager"
+  ],
+  "featureCount": 303,
+  "candidateFeatureCount": 377,
+  "eliminatedSimilarFeatures": 74,
+  "evidenceCount": 914,
+  "aiPageCount": 0,
+  "sourceAIPageCount": 0,
+  "featureEvidencePolicy": "Existing source routes, pages, APIs, models, schemas, and navigation only",
+  "optimizationPolicy": "Equivalent feature names are consolidated once per industry and assigned to one canonical app owner",
+  "database": "database.sqlite",
+  "databaseSeed": {
+    "seededProjects": 0,
+    "seededTables": 0,
+    "seededRows": 0
+  },
+  "visibleFeatureCount": 193,
+  "featureVisibilityMode": "source-backed-fallback"
+}

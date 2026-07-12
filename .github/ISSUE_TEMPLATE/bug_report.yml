@@ -1,0 +1,45 @@
+name: Bug report
+description: Report a reproducible problem in this application.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Remove credentials and personal, customer, patient, or confidential data before submitting.
+  - type: input
+    id: feature
+    attributes:
+      label: Feature or route
+      placeholder: "Example: Dashboard > Review queue"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start the application with ...
+        2. Open ...
+        3. Select ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include sanitized logs or screenshots when useful.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Sensitive-data check
+      options:
+        - label: I removed secrets and sensitive data from this report.
+          required: true

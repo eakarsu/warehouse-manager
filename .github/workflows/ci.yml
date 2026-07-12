@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Validate and smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Reject local-only and sensitive tracked files
+        shell: bash
+        run: |
+          invalid="$(git ls-files | grep -E '(^|/)\.env($|\.)|(^|/)sources/|\.sqlite-(shm|wal|journal)$|\.(pem|key|p12|pfx)$' | grep -v -E '(^|/)\.env\.example$' || true)"
+          if [[ -n "$invalid" ]]; then
+            echo "Local-only or sensitive files are tracked:"
+            echo "$invalid"
+            exit 1
+          fi
+
+      - name: Check Python and shell syntax
+        run: |
+          python -m py_compile _runtime/server.py _runtime/reloader.py scripts/validate_app.py scripts/smoke_test.py
+          bash -n start.sh
+
+      - name: Validate application data
+        run: python scripts/validate_app.py
+
+      - name: Smoke test application
+        run: python scripts/smoke_test.py
+
+      - name: Confirm checks did not modify tracked files
+        run: git diff --exit-code
