@@ -16,11 +16,24 @@ cp .env.example .env
 
 The server listens on `127.0.0.1:4400` by default. OpenRouter is optional and is used only by explicitly labeled AI actions.
 
+## Operations workspace
+
+Open `/workflows` after starting the app. The product includes eight persistent
+domain workflows with validated records, legal state transitions, optimistic
+concurrency, actor-attributed hash-chained audit history, dashboard metrics,
+search and filters, and CSV export. Exact expansion-plan tables and views are
+created automatically when declared in `workflows.json`.
+
+External vendor, government, payer, ERP, device, or data-provider connections
+remain credential-gated and are never reported as connected without a configured
+production endpoint.
+
 ## Validate
 
 ```bash
 python scripts/validate_app.py
 python scripts/smoke_test.py
+python3 -m unittest discover -s _runtime/tests -v
 ```
 
 ## Public demo data
