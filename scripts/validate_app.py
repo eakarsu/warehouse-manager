@@ -1,33 +1,43 @@
 #!/usr/bin/env python3
-"""Validate a standalone merged application's manifest, export, and SQLite data."""
+"""Validate the standalone merged product, workflows, and sanitized data."""
 
 from __future__ import annotations
 
 import json
 import sqlite3
+import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "_runtime"))
+from workflow_engine import WorkflowEngine
+
 REQUIRED_TABLES = {
     "app_metadata", "source_projects", "features", "feature_evidence", "ai_pages", "ai_runs",
     "seed_table_registry", "seed_table_columns", "feature_table_links", "feature_navigation",
+    "workflow_records", "workflow_events", "workflow_seed_registry", "workflow_runtime_meta",
+    "workflow_resource_registry",
 }
 
 
 def main() -> int:
     manifest = json.loads((ROOT / "manifest.json").read_text())
     exported = json.loads((ROOT / "features.json").read_text())
+    workflows = json.loads((ROOT / "workflows.json").read_text())
+    engine = WorkflowEngine(ROOT)
+    status = engine.status()
     connection = sqlite3.connect(ROOT / "database.sqlite")
     try:
         assert connection.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
         assert not connection.execute("PRAGMA foreign_key_check").fetchall()
-        tables = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        objects = {(row[0], row[1]) for row in connection.execute("SELECT name,type FROM sqlite_master")}
+        tables = {name for name, kind in objects if kind == "table"}
         assert REQUIRED_TABLES <= tables
         metadata_id = json.loads(connection.execute(
             "SELECT value FROM app_metadata WHERE key='id'"
         ).fetchone()[0])
-        assert metadata_id == manifest["id"]
+        assert metadata_id == manifest["id"] == workflows["appId"]
         database_features = connection.execute("SELECT id,canonical_key FROM features ORDER BY name,id").fetchall()
         assert len(database_features) == manifest["featureCount"] == len(exported)
         assert {row[1] for row in database_features} == {item["canonicalKey"] for item in exported}
@@ -41,9 +51,18 @@ def main() -> int:
         ).fetchone()[0]
         assert absolute_sources == 0
         assert connection.execute("SELECT COUNT(*) FROM ai_runs").fetchone()[0] == 0
+        assert len(workflows["workflows"]) == status["workflowCount"] == 8
+        assert status["status"] == "ok" and status["audit"]["valid"]
+        assert status["dashboard"]["totalRecords"] >= 8
+        assert all(resource["ready"] for resource in status["resources"])
+        for resource in workflows.get("resources", []):
+            assert any(name == resource["name"] for name, _ in objects)
     finally:
         connection.close()
-    print(f"Validated {manifest['id']}: {len(exported)} features")
+    print(
+        f"Validated {manifest['id']}: {len(exported)} features, "
+        f"{status['workflowCount']} workflows, {len(status['resources'])} planned resources"
+    )
     return 0
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Start the local server and verify its public, non-AI endpoints."""
+"""Start the local server and verify catalog and operational endpoints."""
 
 from __future__ import annotations
 
@@ -44,8 +44,17 @@ def main() -> int:
         assert json.loads(body)["id"] == manifest["id"]
         _, features = fetch("/api/features")
         assert json.loads(features)
+        _, status_body = fetch("/api/product/status")
+        product_status = json.loads(status_body)
+        assert product_status["status"] == "ok"
+        assert product_status["workflowCount"] == 8
+        assert product_status["audit"]["valid"]
+        _, workflows_body = fetch("/api/workflows")
+        assert len(json.loads(workflows_body)["items"]) == 8
         status, homepage = fetch("/")
         assert status == 200 and b"<!doctype html>" in homepage.lower()
+        status, workspace = fetch("/workflows")
+        assert status == 200 and b"operations workspace" in workspace.lower()
     finally:
         process.terminate()
         try:
@@ -53,7 +62,7 @@ def main() -> int:
         except subprocess.TimeoutExpired:
             process.kill()
             process.wait(timeout=5)
-    print(f"Smoke-tested {manifest['id']}")
+    print(f"Smoke-tested {manifest['id']}: catalog + 8 operational workflows")
     return 0
 
 

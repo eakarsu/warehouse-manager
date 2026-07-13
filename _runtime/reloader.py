@@ -18,7 +18,7 @@ STOPPING = False
 
 def watched_paths():
     paths = list(RUNTIME_ROOT.glob("*.py"))
-    paths.extend((APP_ROOT / "manifest.json", LOCAL_ENV))
+    paths.extend((APP_ROOT / "manifest.json", APP_ROOT / "workflows.json", LOCAL_ENV))
     return paths
 
 

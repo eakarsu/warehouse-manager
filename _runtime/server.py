@@ -6,11 +6,11 @@ from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from workflow_engine import WorkflowEngine, WorkflowError, render_workflow_ui
 
 APP_ROOT = Path(os.environ.get("MERGED_APP_ROOT", os.getcwd()))
 DB_PATH = APP_ROOT / "database.sqlite"
 MANIFEST = json.loads((APP_ROOT / "manifest.json").read_text())
-
 PLACEHOLDER_ENV_MARKERS = ("your_", "your-", "replace", "placeholder", "changeme", "example", "xxxx")
 
 def load_env_file(path):
@@ -34,6 +34,7 @@ def configured_env(name):
 load_merged_environment()
 PORT = int(os.environ.get("PORT", "4400"))
 HOST = os.environ.get("MERGED_HOST", "127.0.0.1")
+WORKFLOW_ENGINE = WorkflowEngine(APP_ROOT, DB_PATH)
 
 def rows(sql, params=()):
     connection = sqlite3.connect(DB_PATH); connection.row_factory = sqlite3.Row
@@ -263,6 +264,7 @@ def render(query, request_path="/"):
     primary_links=navigation_links(primary_rows,selected,route_counts) or '<p class="empty">No features match.</p>'
     secondary_links=navigation_links(secondary_rows,selected,route_counts)
     technical_links=navigation_links(technical_rows,selected,route_counts)
+    workflow_link='<a href="/workflows" style="display:flex;justify-content:space-between;gap:20px;background:#d7f0f4;color:#083344;text-decoration:none;padding:15px 18px;border:1px solid #9ecbd1;border-radius:10px;margin-bottom:24px"><strong>Open operations workspace</strong><span>Create, manage, and advance records →</span></a>' if WORKFLOW_ENGINE.workflows else ""
     source_links="".join(f'<a class="source-item {"active" if source==row["project"] else ""}" href="/?source={quote(row["project"])}">{html.escape(row["project"])} <small>{row["seed_row_count"]} rows</small></a>' for row in sources)
     detail='<section class="empty-main"><h2>No feature selected</h2></section>'
     table_payload=native_table_payload(table_name) if table_name else None
@@ -284,6 +286,7 @@ def render(query, request_path="/"):
           detail=feature_table_html(feature,native_table_payload(related[0]["physical_table"]),related)
          else:
           detail=f'''<section class="detail"><div class="eyebrow">{" · ".join(feature["kinds"])}</div><h1>{html.escape(feature["name"])}</h1><p class="lead">Canonical combined feature represented once across {len(feature["consolidatedFromApps"])} merged app(s).</p><dl><dt>Existing aliases</dt><dd>{html.escape(aliases)}</dd><dt>Source projects</dt><dd>{html.escape(", ".join(feature["sourceProjects"]))}</dd></dl><h2>Connected data</h2><ul>{related_links}</ul><h2>Routes</h2><ul>{routes}</ul><h2>Source evidence</h2><div class="table"><table><thead><tr><th>Kind</th><th>Project</th><th>Path</th><th>Route</th></tr></thead><tbody>{evidence_rows}</tbody></table></div></section>'''
+    detail=workflow_link+detail
     return f'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(MANIFEST["title"])}</title><style>
 :root{{--ink:#17202a;--muted:#64748b;--line:#d9e2ec;--brand:#0b6073;--side:#102a43;--active:#d7f0f4;--success:#13795b;--danger:#b42318}}*{{box-sizing:border-box}}body{{margin:0;font:14px system-ui;color:var(--ink);background:#f7f9fb}}.shell{{display:grid;grid-template-columns:340px minmax(0,1fr);min-height:100vh}}aside{{position:sticky;top:0;height:100vh;overflow:auto;background:var(--side);color:white;padding:20px 16px}}aside h1{{font-size:20px;margin:0 0 5px}}.sub{{color:#b8c8d8;margin:0 0 18px}}.search{{width:100%;height:40px;border:0;border-radius:6px;padding:0 10px;margin-bottom:14px}}.section-title{{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#9fb3c8;margin:18px 8px 8px}}.nav-item,.source-item{{display:flex;justify-content:space-between;gap:8px;color:#e7eef5;text-decoration:none;padding:8px;border-radius:6px;line-height:1.25}}.nav-item.active,.source-item.active{{background:var(--active);color:#083344;font-weight:800}}small{{color:#9fb3c8}}.active small{{color:#0b6073}}.admin-explorer{{margin-top:20px;border-top:1px solid #334e68;padding-top:12px}}.admin-explorer>summary,.more-features>summary,.feature-registry>summary{{cursor:pointer;color:#b8c8d8;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.09em;padding:8px;list-style-position:inside}}.more-features{{margin-top:10px}}.feature-registry{{margin:8px 0}}.admin-body{{padding-bottom:8px}}main{{padding:34px;min-width:0}}.detail{{max-width:100%}}h1{{font-size:34px;margin:5px 0 8px}}h2{{margin-top:30px}}.eyebrow{{color:var(--brand);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}}.lead{{color:var(--muted);font-size:16px}}dl{{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;background:white;border:1px solid var(--line);padding:16px}}dt{{font-weight:800}}dd{{margin:0}}.table{{overflow:auto;border:1px solid var(--line);background:white}}table{{border-collapse:collapse;width:100%;min-width:760px}}th,td{{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid var(--line)}}th{{background:#edf2f7;font-size:11px;text-transform:uppercase;white-space:nowrap}}.record-row{{cursor:pointer;transition:background .15s}}.record-row:hover,.record-row:focus{{background:#e8f5f7;outline:none}}code{{word-break:break-word}}.empty{{padding:8px;color:#b8c8d8}}.preset-bar{{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:20px 0 0}}.preset-bar span{{font-size:12px;font-weight:900;color:var(--muted);text-transform:uppercase}}.preset-button{{border:1px solid #9fb3c8;background:white;color:#0b6073;padding:8px 11px;border-radius:999px;font-weight:800;cursor:pointer}}.preset-button:hover{{background:#e8f5f7}}.form-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;background:white;border:1px solid var(--line);padding:22px;margin-top:12px;border-radius:10px}}.form-group{{display:grid;gap:7px}}.form-group.full{{grid-column:1/-1}}.form-group label{{font-weight:800}}.form-group input,.form-group select,.form-group textarea{{width:100%;border:1px solid #bcccdc;border-radius:7px;padding:11px;font:inherit}}.form-group textarea{{min-height:120px}}.actions{{margin-top:16px}}.run-button{{border:0;border-radius:7px;background:var(--brand);color:white;padding:12px 20px;font-weight:900;cursor:pointer}}.run-button:disabled{{opacity:.6}}.status{{margin-top:14px;font-weight:800}}.status.running{{color:#8a5b00}}.status.complete{{color:var(--success)}}.status.error{{color:var(--danger)}}.ai-result{{margin-top:22px;background:white;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 35px rgba(16,42,67,.09);overflow:hidden}}.result-heading{{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#eefbfc,#fff)}}.result-heading h2{{margin:3px 0 0}}.model-chip{{background:#102a43;color:white;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:800}}.result-body{{padding:24px;font-size:15px;line-height:1.65}}.result-body h3{{margin:24px 0 8px;color:#0b6073}}.result-body h3:first-child{{margin-top:0}}.result-body p{{margin:0 0 12px}}.result-body li{{margin:6px 0}}.binding{{margin-top:24px;color:var(--muted)}}.record-modal{{border:0;padding:0;background:transparent;width:min(720px,calc(100% - 32px));max-width:none}}.record-modal::backdrop{{background:rgba(8,25,40,.68);backdrop-filter:blur(3px)}}.modal-panel{{background:white;border-radius:14px;box-shadow:0 24px 80px rgba(0,0,0,.3);max-height:82vh;overflow:auto}}.modal-head{{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:20px 24px;background:white;border-bottom:1px solid var(--line)}}.modal-head h2{{margin:0}}.modal-close{{border:0;background:#edf2f7;width:36px;height:36px;border-radius:50%;font-size:22px;cursor:pointer}}.modal-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;padding:12px 24px 24px}}.modal-field{{padding:14px 0;border-bottom:1px solid var(--line)}}.modal-field:nth-child(odd){{padding-right:18px}}.modal-label{{display:block;color:var(--muted);font-size:11px;font-weight:900;text-transform:uppercase;margin-bottom:5px}}.modal-value{{white-space:pre-wrap;word-break:break-word}}@media(max-width:800px){{.shell{{grid-template-columns:1fr}}aside{{position:relative;height:52vh}}main{{padding:20px}}.form-grid,.modal-grid{{grid-template-columns:1fr}}.modal-field:nth-child(odd){{padding-right:0}}}}
 </style></head><body><div class="shell"><aside><h1>{html.escape(MANIFEST["title"])}</h1><p class="sub">{html.escape(MANIFEST["industry"])} · {len(primary_rows)} primary workflows</p><form><input class="search" name="q" value="{html.escape(search)}" placeholder="Search all features"></form><div class="section-title">{"Search results" if search else "Primary features"}</div>{primary_links}{f'<details class="more-features" {"open" if selected and selected.get("tier")=="secondary" else ""}><summary>More Features ({len(secondary_rows)})</summary>{secondary_links}</details>' if secondary_rows else ''}<details class="admin-explorer" {"open" if source or (selected and selected.get("tier")=="technical") else ""}><summary>Administration</summary><div class="admin-body"><div class="section-title">Source apps</div><a class="source-item" href="/">All source apps</a>{source_links}<details class="feature-registry" {"open" if selected and selected.get("tier")=="technical" else ""}><summary>Feature Registry ({len(technical_rows)})</summary>{technical_links or '<p class="empty">No technical features.</p>'}</details></div></details></aside><main>{detail}</main></div><dialog id="record-modal" class="record-modal"><div class="modal-panel"><header class="modal-head"><div><div class="eyebrow">Record details</div><h2 id="modal-title">Record</h2></div><button class="modal-close" type="button" aria-label="Close">×</button></header><div id="modal-grid" class="modal-grid"></div></div></dialog><script>
@@ -322,6 +325,10 @@ def openrouter_completion(page,values):
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed=urlparse(self.path); query=parse_qs(parsed.query)
+        try:
+            workflow_response=WORKFLOW_ENGINE.dispatch("GET",parsed.path,query,headers=dict(self.headers))
+            if workflow_response: return self.send_workflow_response(workflow_response)
+        except WorkflowError as error: return self.send_json(error.payload(),error.status)
         if parsed.path=="/api/manifest": return self.send_json(MANIFEST)
         if parsed.path=="/api/features":
             visibility_rule,_=feature_visibility_rule()
@@ -331,9 +338,15 @@ class Handler(BaseHTTPRequestHandler):
             name=query.get("name",[""])[0]
             if name: return self.send_json(native_table_payload(name) or {"error":"table not found"})
             return self.send_json([native_table_payload(row["physical_table"]) for row in rows("SELECT physical_table FROM seed_table_registry ORDER BY physical_table")])
+        workflow_ui=re.fullmatch(r"/workflows(?:/([^/]+))?/?",parsed.path)
+        if workflow_ui:
+            body=render_workflow_ui(MANIFEST["title"],workflow_ui.group(1) or "").encode()
+            self.send_response(200); self.send_header("content-type","text/html; charset=utf-8"); self.send_header("content-length",str(len(body))); self.end_headers(); self.wfile.write(body); return
         body=render(query,parsed.path).encode(); self.send_response(200); self.send_header("content-type","text/html; charset=utf-8"); self.end_headers(); self.wfile.write(body)
     def do_POST(self):
         parsed=urlparse(self.path)
+        if parsed.path.startswith("/api/workflows/") or parsed.path.startswith("/api/product/"):
+            return self.handle_workflow_mutation("POST",parsed)
         if parsed.path!="/api/ai/run": return self.send_json({"error":"not found"},404)
         try:
             length=int(self.headers.get("content-length","0")); payload=json.loads(self.rfile.read(length) or b"{}")
@@ -349,11 +362,41 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as error:
                 message=str(error); execute("INSERT INTO ai_runs(ai_page_id,input_json,error,created_at) VALUES (?,?,?,?)",(page["id"],json.dumps(values),message,datetime.now(timezone.utc).isoformat())); return self.send_json({"error":message},503)
         except Exception as error: return self.send_json({"error":str(error)},500)
+    def do_PATCH(self):
+        return self.handle_workflow_mutation("PATCH",urlparse(self.path))
+    def do_DELETE(self):
+        return self.handle_workflow_mutation("DELETE",urlparse(self.path),read_body=False)
+    def handle_workflow_mutation(self,method,parsed,read_body=True):
+        try:
+            payload={}
+            if read_body:
+                length=int(self.headers.get("content-length","0"))
+                if length>2_000_000: raise WorkflowError("Request body is too large.",413,"payload_too_large")
+                try: payload=json.loads(self.rfile.read(length) or b"{}")
+                except json.JSONDecodeError: raise WorkflowError("Request body must be valid JSON.",400,"invalid_json")
+            response=WORKFLOW_ENGINE.dispatch(method,parsed.path,parse_qs(parsed.query),payload,dict(self.headers))
+            if response: return self.send_workflow_response(response)
+            return self.send_json({"error":"not found","code":"not_found"},404)
+        except WorkflowError as error: return self.send_json(error.payload(),error.status)
+        except Exception as error: return self.send_json({"error":str(error),"code":"internal_error"},500)
+    def send_workflow_response(self,response):
+        headers=response.headers or {}
+        if response.body is None: body=b""
+        elif isinstance(response.body,bytes): body=response.body
+        elif isinstance(response.body,str): body=response.body.encode()
+        else: body=json.dumps(response.body,indent=2,default=str).encode()
+        self.send_response(response.status); self.send_header("content-type",response.content_type); self.send_header("content-length",str(len(body)))
+        for key,value in headers.items(): self.send_header(key,value)
+        self.end_headers()
+        if body: self.wfile.write(body)
     def send_json(self,payload,status=200):
-        body=json.dumps(payload,indent=2,default=str).encode(); self.send_response(status); self.send_header("content-type","application/json"); self.end_headers(); self.wfile.write(body)
+        body=json.dumps(payload,indent=2,default=str).encode(); self.send_response(status); self.send_header("content-type","application/json"); self.send_header("content-length",str(len(body))); self.end_headers(); self.wfile.write(body)
     def log_message(self,format,*args): pass
 
-display_host = "127.0.0.1" if HOST == "0.0.0.0" else HOST
-print(f'{MANIFEST["title"]}: http://{display_host}:{PORT}')
-try: ThreadingHTTPServer((HOST,PORT),Handler).serve_forever()
-except KeyboardInterrupt: pass
+def main():
+    display_host = "127.0.0.1" if HOST == "0.0.0.0" else HOST
+    print(f'{MANIFEST["title"]}: http://{display_host}:{PORT}')
+    try: ThreadingHTTPServer((HOST,PORT),Handler).serve_forever()
+    except KeyboardInterrupt: pass
+
+if __name__ == "__main__": main()
