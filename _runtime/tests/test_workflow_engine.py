@@ -60,6 +60,11 @@ class EngineTestCase(unittest.TestCase):
             self.assertEqual(connection.execute("SELECT COUNT(*) FROM case_records").fetchone()[0], 1)
             self.assertEqual(connection.execute("SELECT COUNT(*) FROM active_case_view").fetchone()[0], 1)
 
+    def test_reinitialization_is_byte_idempotent(self):
+        initialized_database = self.database.read_bytes()
+        WorkflowEngine(self.root, self.database)
+        self.assertEqual(self.database.read_bytes(), initialized_database)
+
     def test_crud_validation_filtering_and_optimistic_version(self):
         with self.assertRaises(WorkflowError) as invalid:
             self.engine.create("case-review", {"priority": "Urgent"}, "operator@example.com")

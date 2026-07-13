@@ -305,7 +305,8 @@ class WorkflowEngine:
             self._seed(connection)
             connection.execute(
                 "INSERT INTO workflow_runtime_meta(key,value,updated_at) VALUES('config_hash',?,?) "
-                "ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at",
+                "ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at "
+                "WHERE workflow_runtime_meta.value <> excluded.value",
                 (self.config_hash, _now()),
             )
 
