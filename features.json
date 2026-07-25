@@ -252,6 +252,7 @@
     "canonicalKey": "ai choice client design from learning past preference",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
@@ -266,6 +267,13 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIWarehouseManager",
+        "path": "frontend/src/pages/Batch09/AiClientPreferenceLearningFromPastDesignChoicesGapAi.jsx:1",
+        "route": "/batch09/gap-ai/ai-client-preference-learning-from-past-design-choices",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIWarehouseManager",
@@ -758,6 +766,32 @@
     ]
   },
   {
+    "name": "AI Results History",
+    "canonicalKey": "ai history result",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-history"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AIHistory.js:1",
+        "route": "/ai-history",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "AI Suggestions",
     "canonicalKey": "ai suggestion",
     "aliases": [],
@@ -814,10 +848,12 @@
     "canonicalKey": "aircraft maintenance",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "page"
     ],
     "routes": [
-      "/AircraftMaintenance"
+      "/AircraftMaintenance",
+      "/maintenance?tool=aircraft-maintenance"
     ],
     "sourceProjects": [
       "AIAerospaceMRO"
@@ -827,10 +863,43 @@
     ],
     "evidence": [
       {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AircraftMaintenance.js:1",
+        "route": "/maintenance?tool=aircraft-maintenance",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
+      {
         "kind": "page",
         "sourceProject": "AIAerospaceMRO",
         "path": "frontend/src/pages/AircraftMaintenance.js",
         "route": "/AircraftMaintenance",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Analyses",
+    "canonicalKey": "analyse",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/feature/:category?tool=analyses"
+    ],
+    "sourceProjects": [
+      "AISatelliteImageryAnalyzer"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AISatelliteImageryAnalyzer",
+        "path": "frontend/src/pages/FeatureListPage.jsx:373",
+        "route": "/feature/:category?tool=analyses",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -857,6 +926,32 @@
         "sourceProject": "AISatelliteImageryAnalyzer",
         "path": "frontend/src/pages/AnalysisDetailPage.jsx",
         "route": "/AnalysisDetailPage",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Analysis Details",
+    "canonicalKey": "analysis",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/feature/:category/:id"
+    ],
+    "sourceProjects": [
+      "AISatelliteImageryAnalyzer"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AISatelliteImageryAnalyzer",
+        "path": "frontend/src/pages/AnalysisDetailPage.jsx:1",
+        "route": "/feature/:category/:id",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -1667,10 +1762,13 @@
     "canonicalKey": "capacity carrier forecast",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
     "routes": [
+      "/ai-hub?tool=carrier-capacity-forecast",
+      "/ai-pricing-tools?tool=carrier-capacity-forecast",
       "/ai/carrier-capacity-forecast",
       "/carrier-capacity-forecast"
     ],
@@ -1681,6 +1779,20 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:29",
+        "route": "/ai-hub?tool=carrier-capacity-forecast",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIPricingTools.jsx:1",
+        "route": "/ai-pricing-tools?tool=carrier-capacity-forecast",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIFreightPricingAgent",
@@ -3195,6 +3307,32 @@
     ]
   },
   {
+    "name": "Compliance Directive Analyzer",
+    "canonicalKey": "analyzer compliance directive",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=compliance-check"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:5",
+        "route": "/ai-tools?tool=compliance-check",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Component Reliability",
     "canonicalKey": "component reliability",
     "aliases": [],
@@ -3330,10 +3468,13 @@
     "canonicalKey": "contract optimization",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
     "routes": [
+      "/ai-hub?tool=contract-optimization",
+      "/ai-pricing-tools?tool=contract-optimization",
       "/ai/contract-optimization",
       "/contract-optimization"
     ],
@@ -3344,6 +3485,20 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:64",
+        "route": "/ai-hub?tool=contract-optimization",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIPricingTools.jsx:1",
+        "route": "/ai-pricing-tools?tool=contract-optimization",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIFreightPricingAgent",
@@ -3834,6 +3989,32 @@
         "sourceProject": "AISatelliteImageryAnalyzer",
         "path": "backend/routes/customViews.js:54",
         "route": "/coverage-heatmap",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Cross Fleet Reallocation Advisor",
+    "canonicalKey": "advisor cross fleet reallocation",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=fleet-reallocation"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:121",
+        "route": "/ai-tools?tool=fleet-reallocation",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -4354,6 +4535,32 @@
     ]
   },
   {
+    "name": "Damage Vision Assessor",
+    "canonicalKey": "assessor damage vision",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-hub?tool=damage-vision"
+    ],
+    "sourceProjects": [
+      "AIFreightPricingAgent"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:137",
+        "route": "/ai-hub?tool=damage-vision",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Delete",
     "canonicalKey": "delete",
     "aliases": [],
@@ -4588,10 +4795,12 @@
     "canonicalKey": "demurrage detention predictor",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "page"
     ],
     "routes": [
       "/DetentionDemurragePredictor",
+      "/ai-hub?tool=detention-demurrage",
       "/detention-demurrage-predictor",
       "detention-demurrage-predictor"
     ],
@@ -4602,6 +4811,13 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:120",
+        "route": "/ai-hub?tool=detention-demurrage",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "page",
         "sourceProject": "AIFreightPricingAgent",
@@ -4726,6 +4942,32 @@
     ]
   },
   {
+    "name": "Document Management",
+    "canonicalKey": "document",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/documents"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/Documents.js:1",
+        "route": "/documents",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Document Review",
     "canonicalKey": "document review",
     "aliases": [],
@@ -4756,10 +4998,12 @@
     "canonicalKey": "downtime prediction",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api"
     ],
     "routes": [
-      "/downtime-prediction"
+      "/downtime-prediction",
+      "/maintenance?tool=downtime-prediction"
     ],
     "sourceProjects": [
       "AIAerospaceMRO"
@@ -4768,6 +5012,13 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AircraftMaintenance.js:1",
+        "route": "/maintenance?tool=downtime-prediction",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIAerospaceMRO",
@@ -4782,10 +5033,13 @@
     "canonicalKey": "dynamic rate",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
     "routes": [
+      "/ai-hub?tool=dynamic-rate",
+      "/ai-pricing-tools?tool=dynamic-rate",
       "/ai/dynamic-rate",
       "/dynamic-rate"
     ],
@@ -4796,6 +5050,20 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:10",
+        "route": "/ai-hub?tool=dynamic-rate",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIPricingTools.jsx:1",
+        "route": "/ai-pricing-tools?tool=dynamic-rate",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIFreightPricingAgent",
@@ -5114,6 +5382,32 @@
     ]
   },
   {
+    "name": "Faa Compliance Tracking",
+    "canonicalKey": "compliance faa tracking",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/compliance"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/Compliance.js:1",
+        "route": "/compliance",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Feature List Page",
     "canonicalKey": "feature list page",
     "aliases": [],
@@ -5244,13 +5538,41 @@
     ]
   },
   {
+    "name": "Fleet Health Monitor",
+    "canonicalKey": "fleet health monitor",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/fleet"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/FleetHealth.js:1",
+        "route": "/fleet",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Fleet Optimization",
     "canonicalKey": "fleet optimization",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api"
     ],
     "routes": [
+      "/ai-tools?tool=fleet-optimization",
       "/fleet-optimization"
     ],
     "sourceProjects": [
@@ -5260,6 +5582,13 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:42",
+        "route": "/ai-tools?tool=fleet-optimization",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIAerospaceMRO",
@@ -5468,10 +5797,13 @@
     "canonicalKey": "detection fraud",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
     "routes": [
+      "/ai-hub?tool=fraud-detection",
+      "/ai-pricing-tools?tool=fraud-detection",
       "/ai/fraud-detection",
       "/fraud-detection"
     ],
@@ -5482,6 +5814,20 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:76",
+        "route": "/ai-hub?tool=fraud-detection",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIPricingTools.jsx:1",
+        "route": "/ai-pricing-tools?tool=fraud-detection",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIFreightPricingAgent",
@@ -7973,10 +8319,13 @@
     "canonicalKey": "lane profitability",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
     "routes": [
+      "/ai-hub?tool=lane-profitability",
+      "/ai-pricing-tools?tool=lane-profitability",
       "/ai/lane-profitability",
       "/lane-profitability"
     ],
@@ -7987,6 +8336,20 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:52",
+        "route": "/ai-hub?tool=lane-profitability",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIPricingTools.jsx:1",
+        "route": "/ai-pricing-tools?tool=lane-profitability",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIFreightPricingAgent",
@@ -8283,34 +8646,29 @@
   {
     "name": "Market Intelligence",
     "canonicalKey": "intelligence market",
-    "aliases": [
-      "Market Intelligence Detail"
-    ],
+    "aliases": [],
     "kinds": [
-      "api",
+      "ai-page",
       "page"
     ],
     "routes": [
       "/MarketIntelligence",
-      "/MarketIntelligenceDetail",
       "/market-intelligence",
       "market-intelligence"
     ],
     "sourceProjects": [
-      "AIFreightPricingAgent",
-      "AISupplyChainReshoringAdvisor"
+      "AIFreightPricingAgent"
     ],
     "consolidatedFromApps": [
-      "transportation-logistics/supply-chain-tracker",
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
       {
-        "kind": "api",
-        "sourceProject": "AISupplyChainReshoringAdvisor",
-        "path": "backend/routes/aiCenter.js:97",
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/MarketIntelligence.jsx:1",
         "route": "/market-intelligence",
-        "originApp": "transportation-logistics/supply-chain-tracker"
+        "originApp": "transportation-logistics/warehouse-manager"
       },
       {
         "kind": "page",
@@ -8332,6 +8690,38 @@
         "path": "client/src/pages/MarketIntelligence.jsx",
         "route": "/MarketIntelligence",
         "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Market Intelligence Detail",
+    "canonicalKey": "intelligence market",
+    "aliases": [
+      "Market Intelligence"
+    ],
+    "kinds": [
+      "api",
+      "page"
+    ],
+    "routes": [
+      "/MarketIntelligenceDetail",
+      "/market-intelligence"
+    ],
+    "sourceProjects": [
+      "AIFreightPricingAgent",
+      "AISupplyChainReshoringAdvisor"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/supply-chain-tracker",
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "api",
+        "sourceProject": "AISupplyChainReshoringAdvisor",
+        "path": "backend/routes/aiCenter.js:97",
+        "route": "/market-intelligence",
+        "originApp": "transportation-logistics/supply-chain-tracker"
       },
       {
         "kind": "page",
@@ -8371,38 +8761,28 @@
   {
     "name": "Match Technician",
     "canonicalKey": "match technician",
-    "aliases": [
-      "Technician Match"
-    ],
+    "aliases": [],
     "kinds": [
+      "ai-page",
       "api"
     ],
     "routes": [
       "/match-technician",
-      "/technician-match"
+      "/technician-matcher?tool=match-technician"
     ],
     "sourceProjects": [
-      "AIAerospaceMRO",
-      "AIAutoBodyCollisionEstimator"
+      "AIAerospaceMRO"
     ],
     "consolidatedFromApps": [
-      "transportation-logistics/space-debris-tracker",
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
       {
-        "kind": "api",
-        "sourceProject": "AIAutoBodyCollisionEstimator",
-        "path": "backend/routes/ai.js:628",
-        "route": "/match-technician",
-        "originApp": "transportation-logistics/space-debris-tracker"
-      },
-      {
-        "kind": "api",
-        "sourceProject": "AIAutoBodyCollisionEstimator",
-        "path": "backend/routes/ai.js:327",
-        "route": "/technician-match",
-        "originApp": "transportation-logistics/space-debris-tracker"
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/TechnicianMatcher.js:61",
+        "route": "/technician-matcher?tool=match-technician",
+        "originApp": "transportation-logistics/warehouse-manager"
       },
       {
         "kind": "api",
@@ -8748,6 +9128,58 @@
     ]
   },
   {
+    "name": "Mel Deferral Analyzer",
+    "canonicalKey": "analyzer deferral mel",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=mel-analysis"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:51",
+        "route": "/ai-tools?tool=mel-analysis",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Mel Deferral Tracking",
+    "canonicalKey": "deferral mel tracking",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/mel-tracking"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/MelTracking.js:1",
+        "route": "/mel-tracking",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Mel Tracking",
     "canonicalKey": "mel tracking",
     "aliases": [],
@@ -8824,6 +9256,32 @@
         "sourceProject": "AIWarehouseManager",
         "path": "backend/src/routes/extensions.js:185",
         "route": "/projects/timelines/:id/milestones",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Mode Recommendation",
+    "canonicalKey": "mode recommendation",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-hub?tool=shipment-mode-recommendation"
+    ],
+    "sourceProjects": [
+      "AIFreightPricingAgent"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:87",
+        "route": "/ai-hub?tool=shipment-mode-recommendation",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -9282,6 +9740,32 @@
     ]
   },
   {
+    "name": "Part Lifecycle Analyzer",
+    "canonicalKey": "analyzer lifecycle part",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=parts-analysis"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:16",
+        "route": "/ai-tools?tool=parts-analysis",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Parts",
     "canonicalKey": "part",
     "aliases": [
@@ -9422,6 +9906,32 @@
         "sourceProject": "AIAerospaceMRO",
         "path": "backend/routes/customViews.js:321",
         "route": "/requisition/parts-catalog",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Parts Lifecycle Tracking",
+    "canonicalKey": "lifecycle part tracking",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/parts"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/PartLifecycle.js:1",
+        "route": "/parts",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -9805,57 +10315,29 @@
   {
     "name": "Predict Maintenance",
     "canonicalKey": "maintenance predict",
-    "aliases": [
-      "Maintenance Predict"
-    ],
+    "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
     "routes": [
-      "/maintenance-predict",
-      "/predict-maintenance"
+      "/predict-maintenance",
+      "/predict-maintenance?tool=predict-maintenance"
     ],
     "sourceProjects": [
-      "AIAerospaceMRO",
-      "AIAnalyzetelematics",
-      "AIFleetElectrificationPlanner",
-      "AIParkingManagementPlatform",
-      "AISupplyChainTracker"
+      "AIAerospaceMRO"
     ],
     "consolidatedFromApps": [
-      "transportation-logistics/fleet-maintenance-scheduler",
-      "transportation-logistics/supply-chain-tracker",
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
       {
-        "kind": "api",
-        "sourceProject": "AIFleetElectrificationPlanner",
-        "path": "backend/src/routes/ai.js:324",
-        "route": "/maintenance-predict",
-        "originApp": "transportation-logistics/fleet-maintenance-scheduler"
-      },
-      {
-        "kind": "api",
-        "sourceProject": "AIAnalyzetelematics",
-        "path": "backend/routes/ai.js:193",
-        "route": "/predict-maintenance",
-        "originApp": "transportation-logistics/fleet-maintenance-scheduler"
-      },
-      {
-        "kind": "api",
-        "sourceProject": "AIParkingManagementPlatform",
-        "path": "server/routes/ai.js:509",
-        "route": "/predict-maintenance",
-        "originApp": "transportation-logistics/supply-chain-tracker"
-      },
-      {
-        "kind": "api",
-        "sourceProject": "AISupplyChainTracker",
-        "path": "server/routes/fleetAgents.js:52",
-        "route": "/predict-maintenance",
-        "originApp": "transportation-logistics/supply-chain-tracker"
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/PredictiveMaintenance.js:54",
+        "route": "/predict-maintenance?tool=predict-maintenance",
+        "originApp": "transportation-logistics/warehouse-manager"
       },
       {
         "kind": "api",
@@ -9892,6 +10374,7 @@
     "canonicalKey": "and lifespan material modeling predictive wear",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
@@ -9906,6 +10389,13 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIWarehouseManager",
+        "path": "frontend/src/pages/Batch09/PredictiveMaterialWearAndLifespanModelingGapAi.jsx:1",
+        "route": "/batch09/gap-ai/predictive-material-wear-and-lifespan-modeling",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIWarehouseManager",
@@ -10306,6 +10796,58 @@
         "sourceProject": "AIAerospaceMRO",
         "path": "backend/routes/ai.js:537",
         "route": "/purchase-analysis",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Purchase Order Analyzer",
+    "canonicalKey": "analyzer order purchase",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=purchase-analysis"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:79",
+        "route": "/ai-tools?tool=purchase-analysis",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Purchase Order Management",
+    "canonicalKey": "order purchase",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/purchase-orders"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/PurchaseOrders.js:1",
+        "route": "/purchase-orders",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -10823,9 +11365,11 @@
     "canonicalKey": "cost estimate repair",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api"
     ],
     "routes": [
+      "/cost-estimator?tool=repair-cost-estimate",
       "/repair-cost-estimate"
     ],
     "sourceProjects": [
@@ -10835,6 +11379,13 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/CostEstimator.js:85",
+        "route": "/cost-estimator?tool=repair-cost-estimate",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIAerospaceMRO",
@@ -11147,6 +11698,58 @@
     ]
   },
   {
+    "name": "Safety Incident Analyzer",
+    "canonicalKey": "analyzer incident safety",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=safety-analysis"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:30",
+        "route": "/ai-tools?tool=safety-analysis",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Safety Incident Reporting",
+    "canonicalKey": "incident reporting safety",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/incidents"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/Incidents.js:1",
+        "route": "/incidents",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Scan",
     "canonicalKey": "scan",
     "aliases": [],
@@ -11209,6 +11812,32 @@
     ]
   },
   {
+    "name": "Sensor Anomaly Detector",
+    "canonicalKey": "anomaly detector sensor",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=anomaly-detect"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:92",
+        "route": "/ai-tools?tool=anomaly-detect",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Share",
     "canonicalKey": "share",
     "aliases": [],
@@ -11256,6 +11885,32 @@
         "sourceProject": "AISatelliteImageryAnalyzer",
         "path": "frontend/src/pages/SharedViewPage.jsx",
         "route": "/SharedViewPage",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Shift Coverage Optimizer",
+    "canonicalKey": "coverage optimizer shift",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=optimize-shifts"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:102",
+        "route": "/ai-tools?tool=optimize-shifts",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -11313,10 +11968,12 @@
     "canonicalKey": "mode recommendation shipment",
     "aliases": [],
     "kinds": [
+      "ai-page",
       "api",
       "page"
     ],
     "routes": [
+      "/ai-pricing-tools?tool=shipment-mode-recommendation",
       "/ai/shipment-mode-recommendation",
       "/shipment-mode-recommendation"
     ],
@@ -11327,6 +11984,13 @@
       "transportation-logistics/warehouse-manager"
     ],
     "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIPricingTools.jsx:1",
+        "route": "/ai-pricing-tools?tool=shipment-mode-recommendation",
+        "originApp": "transportation-logistics/warehouse-manager"
+      },
       {
         "kind": "api",
         "sourceProject": "AIFreightPricingAgent",
@@ -11525,6 +12189,32 @@
         "sourceProject": "AIWarehouseManager",
         "path": "backend/src/routes/runtimeAi.js:37",
         "route": "/space-plan",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Spot Market Scan",
+    "canonicalKey": "market scan spot",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-hub?tool=spot-market-scan"
+    ],
+    "sourceProjects": [
+      "AIFreightPricingAgent"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIFreightPricingAgent",
+        "path": "client/src/pages/AIHub.jsx:106",
+        "route": "/ai-hub?tool=spot-market-scan",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -12083,6 +12773,32 @@
     ]
   },
   {
+    "name": "Technical Document Review",
+    "canonicalKey": "document review technical",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=document-review"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:66",
+        "route": "/ai-tools?tool=document-review",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
     "name": "Technician Matcher",
     "canonicalKey": "matcher technician",
     "aliases": [],
@@ -12126,6 +12842,32 @@
         "sourceProject": "AIAerospaceMRO",
         "path": "frontend/src/pages/TechnicianMatcher.js",
         "route": "/TechnicianMatcher",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Technician Training Path",
+    "canonicalKey": "path technician training",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/ai-tools?tool=training-path"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/AITools.js:111",
+        "route": "/ai-tools?tool=training-path",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]
@@ -13233,6 +13975,32 @@
         "sourceProject": "AIAerospaceMRO",
         "path": "frontend/src/pages/WarrantyTracking.js",
         "route": "/WarrantyTracking",
+        "originApp": "transportation-logistics/warehouse-manager"
+      }
+    ]
+  },
+  {
+    "name": "Work Order Management",
+    "canonicalKey": "order work",
+    "aliases": [],
+    "kinds": [
+      "ai-page"
+    ],
+    "routes": [
+      "/work-orders"
+    ],
+    "sourceProjects": [
+      "AIAerospaceMRO"
+    ],
+    "consolidatedFromApps": [
+      "transportation-logistics/warehouse-manager"
+    ],
+    "evidence": [
+      {
+        "kind": "ai-page",
+        "sourceProject": "AIAerospaceMRO",
+        "path": "frontend/src/pages/WorkOrders.js:1",
+        "route": "/work-orders",
         "originApp": "transportation-logistics/warehouse-manager"
       }
     ]

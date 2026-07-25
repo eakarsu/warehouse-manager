@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import sqlite3
 import subprocess
 import sys
 import time
@@ -51,6 +52,11 @@ def main() -> int:
             for route in feature.get("routes", [])
             if route.startswith("/") and not route.startswith("/api/") and "?" in route
         ), None)
+        with sqlite3.connect(ROOT / "database.sqlite") as connection:
+            ai_row = connection.execute(
+                "SELECT id, route, inputs_json FROM ai_pages "
+                "WHERE inputs_json NOT IN ('', '[]') ORDER BY id LIMIT 1"
+            ).fetchone()
         _, status_body = fetch("/api/product/status")
         product_status = json.loads(status_body)
         assert product_status["status"] == "ok"
@@ -66,6 +72,15 @@ def main() -> int:
             status, feature_page = fetch(query_route)
             assert status == 200
             assert b"no feature selected" not in feature_page.lower()
+        if ai_row:
+            ai_page_id, ai_route, inputs_json = ai_row
+            status, ai_form = fetch(ai_route)
+            assert status == 200
+            assert f'data-page-id="{ai_page_id}"'.encode() in ai_form
+            for field in json.loads(inputs_json):
+                key = str(field.get("key", ""))
+                if key:
+                    assert f'name="{key}"'.encode() in ai_form
     finally:
         process.terminate()
         try:
@@ -74,7 +89,8 @@ def main() -> int:
             process.kill()
             process.wait(timeout=5)
     query_result = " + query route" if query_route else ""
-    print(f"Smoke-tested {manifest['id']}: catalog + 8 operational workflows{query_result}")
+    ai_result = " + source AI form" if ai_row else ""
+    print(f"Smoke-tested {manifest['id']}: catalog + 8 operational workflows{query_result}{ai_result}")
     return 0
 
 

@@ -220,21 +220,27 @@ def route_matches(route, request_path, request_query):
     expected=parse_qs(parsed.query,keep_blank_values=True)
     return all(request_query.get(key,[])==values for key,values in expected.items())
 
+def route_query_prefix_matches(route, request_path, request_query):
+    """Let a category-only AI URL open the first source tool in that category."""
+    if not request_query: return False
+    parsed=urlparse(route)
+    if parsed.path!=request_path: return False
+    expected=parse_qs(parsed.query,keep_blank_values=True)
+    return bool(expected) and all(expected.get(key,[])==values for key,values in request_query.items())
+
 def source_overview_html(source_row,feature_rows,route_counts):
     feature_links="".join(f'<li><a href="{html.escape(preferred_route(feature,route_counts))}">{html.escape(feature["name"])}</a> <small>{"AI feature" if feature["ai_route"] else html.escape(feature["tier"]+" feature")}</small></li>' for feature in feature_rows)
     if not feature_links: feature_links='<li>No user-facing features are assigned to this source app.</li>'
     table_stats=rows("SELECT COUNT(*) AS table_count,COALESCE(SUM(row_count),0) AS row_count FROM seed_table_registry WHERE source_project=?",(source_row["project"],))[0]
     return f'''<section class="detail source-overview"><div class="eyebrow">Source application</div><h1>{html.escape(source_row["project"])}</h1><p class="lead">Source overview for this merged specialization. Select a feature below to open its workflow.</p><dl><dt>Available features</dt><dd>{len(feature_rows)}</dd><dt>Native tables</dt><dd>{table_stats["table_count"]}</dd><dt>Seeded records</dt><dd>{table_stats["row_count"]}</dd><dt>Source location</dt><dd><code>{html.escape(source_row["source_path"])}</code></dd></dl><h2>Features from this source</h2><ul class="source-feature-list">{feature_links}</ul></section>'''
 
-STRICT_FEATURE_VISIBILITY = "(ai_pages.id IS NOT NULL OR EXISTS (SELECT 1 FROM feature_table_links visible_link JOIN seed_table_registry visible_table ON visible_table.id=visible_link.table_id WHERE visible_link.feature_id=features.id AND visible_table.row_count>0))"
+STRICT_FEATURE_VISIBILITY = "(EXISTS (SELECT 1 FROM ai_pages visible_ai WHERE visible_ai.feature_id=features.id) OR EXISTS (SELECT 1 FROM feature_table_links visible_link JOIN seed_table_registry visible_table ON visible_table.id=visible_link.table_id WHERE visible_link.feature_id=features.id AND visible_table.row_count>0))"
 
 def feature_visibility_rule():
-    strict_count=rows("""SELECT COUNT(DISTINCT features.id) AS count FROM features
-        LEFT JOIN ai_pages ON ai_pages.feature_id=features.id WHERE """+STRICT_FEATURE_VISIBILITY)[0]["count"]
+    strict_count=rows("SELECT COUNT(DISTINCT features.id) AS count FROM features WHERE "+STRICT_FEATURE_VISIBILITY)[0]["count"]
     if strict_count>=2: return STRICT_FEATURE_VISIBILITY,False
     if strict_count==1:
         supplements=rows("""SELECT features.id FROM features JOIN feature_navigation ON feature_navigation.feature_id=features.id
-            LEFT JOIN ai_pages ON ai_pages.feature_id=features.id
             WHERE feature_navigation.tier IN ('primary','secondary') AND NOT """+STRICT_FEATURE_VISIBILITY+" ORDER BY feature_navigation.priority DESC,features.name LIMIT 1")
         if supplements: return f"({STRICT_FEATURE_VISIBILITY} OR features.id={int(supplements[0]['id'])})",False
     user_facing=rows("SELECT COUNT(*) AS count FROM feature_navigation WHERE tier IN ('primary','secondary')")[0]["count"]
@@ -247,22 +253,25 @@ def render(query, request_path="/"):
     if search: where.append("(name LIKE ? OR aliases_json LIKE ?)"); params += [f"%{search}%",f"%{search}%"]
     if source: where.append("source_projects_json LIKE ?"); params.append(f'%"{source}"%')
     clause=" WHERE "+" AND ".join(where) if where else ""
-    feature_rows=rows("SELECT features.*,ai_pages.route AS ai_route,feature_navigation.tier,feature_navigation.priority FROM features LEFT JOIN ai_pages ON ai_pages.feature_id=features.id JOIN feature_navigation ON feature_navigation.feature_id=features.id"+clause+" ORDER BY CASE feature_navigation.tier WHEN 'primary' THEN 1 WHEN 'secondary' THEN 2 ELSE 3 END,feature_navigation.priority DESC,features.name",params)
+    feature_rows=rows("SELECT features.*,(SELECT route FROM ai_pages WHERE ai_pages.feature_id=features.id ORDER BY id LIMIT 1) AS ai_route,feature_navigation.tier,feature_navigation.priority FROM features JOIN feature_navigation ON feature_navigation.feature_id=features.id"+clause+" ORDER BY CASE feature_navigation.tier WHEN 'primary' THEN 1 WHEN 'secondary' THEN 2 ELSE 3 END,feature_navigation.priority DESC,features.name",params)
     if fallback_mode and feature_rows and not any(row["tier"] in {"primary","secondary"} for row in feature_rows):
         for index,row in enumerate(feature_rows): row["tier"]="primary" if index<24 else "secondary"
     route_counts={}
     for row in feature_rows:
         candidate=route_candidate(row)
         if candidate: route_counts[candidate]=route_counts.get(candidate,0)+1
-    selected=None
+    selected=None; selected_ai_page_id=None
     if request_path!="/":
-        route_page=next((page for page in rows("SELECT feature_id,route FROM ai_pages ORDER BY id") if route_matches(page["route"],request_path,query)),None)
-        if route_page and route_page["feature_id"]: feature_id=str(route_page["feature_id"])
+        available_ai_pages=rows("SELECT id,feature_id,route FROM ai_pages ORDER BY id")
+        route_page=next((page for page in available_ai_pages if route_matches(page["route"],request_path,query)),None)
+        if route_page is None:
+            route_page=next((page for page in available_ai_pages if route_query_prefix_matches(page["route"],request_path,query)),None)
+        if route_page and route_page["feature_id"]: feature_id=str(route_page["feature_id"]); selected_ai_page_id=route_page["id"]
         else:
             route_feature=next((row for row in feature_rows if any(route_matches(route,request_path,query) for route in json.loads(row.get("routes_json") or "[]"))),None)
             if route_feature: feature_id=str(route_feature["id"])
     if feature_id.isdigit():
-        found=rows("SELECT features.*,ai_pages.route AS ai_route,feature_navigation.tier,feature_navigation.priority FROM features LEFT JOIN ai_pages ON ai_pages.feature_id=features.id JOIN feature_navigation ON feature_navigation.feature_id=features.id WHERE features.id=? AND "+visibility_rule,(int(feature_id),)); selected=found[0] if found else None
+        found=rows("SELECT features.*,(SELECT route FROM ai_pages WHERE ai_pages.feature_id=features.id ORDER BY id LIMIT 1) AS ai_route,feature_navigation.tier,feature_navigation.priority FROM features JOIN feature_navigation ON feature_navigation.feature_id=features.id WHERE features.id=? AND "+visibility_rule,(int(feature_id),)); selected=found[0] if found else None
         if selected and fallback_mode and selected["tier"]=="technical": selected["tier"]="primary"
     if selected is None and feature_rows and not table_name and not source and request_path=="/": selected=feature_rows[0]
     sources=rows("SELECT * FROM source_projects ORDER BY project")
@@ -285,7 +294,7 @@ def render(query, request_path="/"):
     elif table_payload:
         detail=native_table_html(table_payload)
     elif selected:
-        ai_pages=[page for page in rows("SELECT * FROM ai_pages WHERE feature_id=? ORDER BY id",(selected["id"],)) if ai_binding_is_valid(page)][:1]
+        ai_pages=[page for page in rows("SELECT * FROM ai_pages WHERE feature_id=? ORDER BY CASE WHEN id=? THEN 0 ELSE 1 END,id",(selected["id"],selected_ai_page_id or -1)) if ai_binding_is_valid(page)][:1]
         if ai_pages: detail=ai_page_html(ai_pages[0])
         else:
          feature=feature_payload(selected); evidence=rows("SELECT * FROM feature_evidence WHERE feature_id=? ORDER BY kind,source_project,evidence_path",(feature["id"],))
@@ -343,7 +352,7 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path=="/api/manifest": return self.send_json(MANIFEST)
         if parsed.path=="/api/features":
             visibility_rule,_=feature_visibility_rule()
-            return self.send_json([feature_payload(row) for row in rows("SELECT features.* FROM features LEFT JOIN ai_pages ON ai_pages.feature_id=features.id JOIN feature_navigation ON feature_navigation.feature_id=features.id WHERE "+visibility_rule+" ORDER BY features.name")])
+            return self.send_json([feature_payload(row) for row in rows("SELECT features.* FROM features JOIN feature_navigation ON feature_navigation.feature_id=features.id WHERE "+visibility_rule+" ORDER BY features.name")])
         if parsed.path=="/api/tables": return self.send_json(rows("SELECT * FROM seed_table_registry ORDER BY physical_table"))
         if parsed.path in {"/api/table","/api/seed-data"}:
             name=query.get("name",[""])[0]
