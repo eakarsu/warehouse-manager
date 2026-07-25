@@ -11,10 +11,10 @@
     "AISatelliteImageryAnalyzer",
     "AIWarehouseManager"
   ],
-  "featureCount": 303,
-  "candidateFeatureCount": 377,
-  "eliminatedSimilarFeatures": 74,
-  "evidenceCount": 914,
+  "featureCount": 311,
+  "candidateFeatureCount": 397,
+  "eliminatedSimilarFeatures": 86,
+  "evidenceCount": 966,
   "aiPageCount": 0,
   "sourceAIPageCount": 0,
   "featureEvidencePolicy": "Existing source routes, pages, APIs, models, schemas, and navigation only",
@@ -25,6 +25,6 @@
     "seededTables": 0,
     "seededRows": 0
   },
-  "visibleFeatureCount": 193,
+  "visibleFeatureCount": 192,
   "featureVisibilityMode": "source-backed-fallback"
 }

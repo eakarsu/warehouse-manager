@@ -3,62 +3,1949 @@
   "appId": "warehouse-manager",
   "workflows": [
     {
-      "id":"shipment-intake","title":"Shipment and Tender Intake","description":"Capture shipments, tenders, lanes, SKUs, windows, documents, and service requirements from a declared source.",
-      "fields":[{"key":"shipmentRef","label":"Shipment Reference","type":"text","required":true},{"key":"lane","label":"Origin to Destination","type":"text","required":true},{"key":"serviceLevel","label":"Service Level","type":"select","required":true,"options":["Standard","Expedited","Temperature controlled","White glove"]},{"key":"pickupDate","label":"Pickup Date","type":"date","required":true},{"key":"intakeSource","label":"Intake Source","type":"select","required":true,"options":["Manual","Local CSV","Configured TMS"]}],
-      "states":["draft","validating","needs-information","accepted","tender-ready"],"transitions":[{"id":"validate","label":"Validate Shipment","from":["draft","needs-information"],"to":"validating"},{"id":"request-info","label":"Request Information","from":["validating"],"to":"needs-information"},{"id":"accept","label":"Accept Shipment","from":["validating"],"to":"accepted"},{"id":"tender","label":"Mark Tender Ready","from":["accepted"],"to":"tender-ready"}],
-      "seeds":[{"id":"shipment-1001","state":"draft","shipmentRef":"SHP-2026-7011","lane":"Newark, NJ to Columbus, OH","serviceLevel":"Standard","pickupDate":"2026-07-16","intakeSource":"Manual"}]
+      "id": "request-intake",
+      "title": "Activity Request Intake",
+      "description": "Manage request intake for Activity within Warehouse Manager, with explicit ownership, due dates, state transitions, and audit history.",
+      "fields": [
+        {
+          "key": "reference",
+          "label": "Reference",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "subject",
+          "label": "Activity Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "owner",
+          "label": "Owner",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        {
+          "key": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Operational Notes",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "states": [
+        "draft",
+        "submitted",
+        "triage",
+        "accepted",
+        "rejected"
+      ],
+      "transitions": [
+        {
+          "id": "submit",
+          "label": "Submit Request",
+          "from": [
+            "draft"
+          ],
+          "to": "submitted"
+        },
+        {
+          "id": "triage",
+          "label": "Start Triage",
+          "from": [
+            "submitted"
+          ],
+          "to": "triage"
+        },
+        {
+          "id": "accept",
+          "label": "Accept Request",
+          "from": [
+            "triage"
+          ],
+          "to": "accepted"
+        },
+        {
+          "id": "reject",
+          "label": "Reject Request",
+          "from": [
+            "submitted",
+            "triage"
+          ],
+          "to": "rejected"
+        }
+      ],
+      "seeds": [
+        {
+          "id": "request-intake-001",
+          "state": "draft",
+          "reference": "WARMAN-0001",
+          "subject": "Activity — North Region",
+          "owner": "Avery Morgan",
+          "priority": "Low",
+          "dueDate": "2026-08-01",
+          "notes": "Demo request intake record for north region; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-002",
+          "state": "draft",
+          "reference": "WARMAN-0002",
+          "subject": "Activity — Enterprise Account",
+          "owner": "Jordan Lee",
+          "priority": "Medium",
+          "dueDate": "2026-08-03",
+          "notes": "Demo request intake record for enterprise account; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-003",
+          "state": "draft",
+          "reference": "WARMAN-0003",
+          "subject": "Activity — Quarterly Cycle",
+          "owner": "Taylor Brooks",
+          "priority": "High",
+          "dueDate": "2026-08-05",
+          "notes": "Demo request intake record for quarterly cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-004",
+          "state": "draft",
+          "reference": "WARMAN-0004",
+          "subject": "Activity — Priority Queue",
+          "owner": "Morgan Chen",
+          "priority": "Critical",
+          "dueDate": "2026-08-07",
+          "notes": "Demo request intake record for priority queue; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-005",
+          "state": "draft",
+          "reference": "WARMAN-0005",
+          "subject": "Activity — Operations Review",
+          "owner": "Riley Patel",
+          "priority": "Low",
+          "dueDate": "2026-08-09",
+          "notes": "Demo request intake record for operations review; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-006",
+          "state": "draft",
+          "reference": "WARMAN-0006",
+          "subject": "Activity — Customer Request",
+          "owner": "Casey Nguyen",
+          "priority": "Medium",
+          "dueDate": "2026-08-11",
+          "notes": "Demo request intake record for customer request; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-007",
+          "state": "draft",
+          "reference": "WARMAN-0007",
+          "subject": "Activity — Compliance Check",
+          "owner": "Cameron Diaz",
+          "priority": "High",
+          "dueDate": "2026-08-13",
+          "notes": "Demo request intake record for compliance check; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-008",
+          "state": "draft",
+          "reference": "WARMAN-0008",
+          "subject": "Activity — Service Window",
+          "owner": "Drew Wilson",
+          "priority": "Critical",
+          "dueDate": "2026-08-15",
+          "notes": "Demo request intake record for service window; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-009",
+          "state": "draft",
+          "reference": "WARMAN-0009",
+          "subject": "Activity — Quality Sample",
+          "owner": "Emerson Clark",
+          "priority": "Low",
+          "dueDate": "2026-08-17",
+          "notes": "Demo request intake record for quality sample; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-010",
+          "state": "draft",
+          "reference": "WARMAN-0010",
+          "subject": "Activity — Management Review",
+          "owner": "Hayden Kim",
+          "priority": "Medium",
+          "dueDate": "2026-08-19",
+          "notes": "Demo request intake record for management review; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-011",
+          "state": "draft",
+          "reference": "WARMAN-0011",
+          "subject": "Activity — Exception Follow-up",
+          "owner": "Jamie Rivera",
+          "priority": "High",
+          "dueDate": "2026-08-21",
+          "notes": "Demo request intake record for exception follow-up; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-012",
+          "state": "draft",
+          "reference": "WARMAN-0012",
+          "subject": "Activity — Evidence Package",
+          "owner": "Kai Thompson",
+          "priority": "Critical",
+          "dueDate": "2026-08-23",
+          "notes": "Demo request intake record for evidence package; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-013",
+          "state": "draft",
+          "reference": "WARMAN-0013",
+          "subject": "Activity — Planning Cycle",
+          "owner": "Logan Shah",
+          "priority": "Low",
+          "dueDate": "2026-08-25",
+          "notes": "Demo request intake record for planning cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-014",
+          "state": "draft",
+          "reference": "WARMAN-0014",
+          "subject": "Activity — Performance Review",
+          "owner": "Parker Evans",
+          "priority": "Medium",
+          "dueDate": "2026-08-27",
+          "notes": "Demo request intake record for performance review; verify evidence and next action before completion."
+        },
+        {
+          "id": "request-intake-015",
+          "state": "draft",
+          "reference": "WARMAN-0015",
+          "subject": "Activity — Final Verification",
+          "owner": "Quinn Murphy",
+          "priority": "High",
+          "dueDate": "2026-08-29",
+          "notes": "Demo request intake record for final verification; verify evidence and next action before completion."
+        }
+      ]
     },
     {
-      "id":"customs-document-check","title":"Customs Document Check","description":"Validate commercial invoices, packing lists, HS codes, origin, and required declarations before release.",
-      "fields":[{"key":"shipmentRef","label":"Shipment Reference","type":"text","required":true},{"key":"documentSet","label":"Document Set","type":"textarea","required":true},{"key":"destinationCountry","label":"Destination Country","type":"text","required":true},{"key":"checkMode","label":"Check Mode","type":"select","required":true,"options":["Local rules","Manual broker review","Configured customs provider"]},{"key":"reviewer","label":"Compliance Reviewer","type":"text","required":true}],
-      "states":["received","checking","findings-ready","correction-needed","cleared"],"transitions":[{"id":"check","label":"Run Document Checks","from":["received","correction-needed"],"to":"checking"},{"id":"findings","label":"Save Findings","from":["checking"],"to":"findings-ready"},{"id":"correct","label":"Request Correction","from":["findings-ready"],"to":"correction-needed"},{"id":"clear","label":"Clear Documents","from":["findings-ready"],"to":"cleared"}],
-      "seeds":[{"id":"customs-check-1001","state":"received","shipmentRef":"SHP-2026-7012","documentSet":"Commercial invoice and packing list","destinationCountry":"Canada","checkMode":"Local rules","reviewer":"Reese Coleman"}]
+      "id": "operations-queue",
+      "title": "Admin Operations Queue",
+      "description": "Manage operations queue for Admin within Warehouse Manager, with explicit ownership, due dates, state transitions, and audit history.",
+      "fields": [
+        {
+          "key": "reference",
+          "label": "Reference",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "subject",
+          "label": "Admin Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "owner",
+          "label": "Owner",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        {
+          "key": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Operational Notes",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "states": [
+        "queued",
+        "assigned",
+        "in-progress",
+        "blocked",
+        "complete"
+      ],
+      "transitions": [
+        {
+          "id": "assign",
+          "label": "Assign Work",
+          "from": [
+            "queued"
+          ],
+          "to": "assigned"
+        },
+        {
+          "id": "start",
+          "label": "Start Work",
+          "from": [
+            "assigned"
+          ],
+          "to": "in-progress"
+        },
+        {
+          "id": "block",
+          "label": "Record Blocker",
+          "from": [
+            "assigned",
+            "in-progress"
+          ],
+          "to": "blocked"
+        },
+        {
+          "id": "complete",
+          "label": "Complete Work",
+          "from": [
+            "in-progress",
+            "blocked"
+          ],
+          "to": "complete"
+        }
+      ],
+      "seeds": [
+        {
+          "id": "operations-queue-001",
+          "state": "queued",
+          "reference": "WARMAN-0001",
+          "subject": "Admin — North Region",
+          "owner": "Avery Morgan",
+          "priority": "Low",
+          "dueDate": "2026-08-01",
+          "notes": "Demo operations queue record for north region; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-002",
+          "state": "queued",
+          "reference": "WARMAN-0002",
+          "subject": "Admin — Enterprise Account",
+          "owner": "Jordan Lee",
+          "priority": "Medium",
+          "dueDate": "2026-08-03",
+          "notes": "Demo operations queue record for enterprise account; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-003",
+          "state": "queued",
+          "reference": "WARMAN-0003",
+          "subject": "Admin — Quarterly Cycle",
+          "owner": "Taylor Brooks",
+          "priority": "High",
+          "dueDate": "2026-08-05",
+          "notes": "Demo operations queue record for quarterly cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-004",
+          "state": "queued",
+          "reference": "WARMAN-0004",
+          "subject": "Admin — Priority Queue",
+          "owner": "Morgan Chen",
+          "priority": "Critical",
+          "dueDate": "2026-08-07",
+          "notes": "Demo operations queue record for priority queue; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-005",
+          "state": "queued",
+          "reference": "WARMAN-0005",
+          "subject": "Admin — Operations Review",
+          "owner": "Riley Patel",
+          "priority": "Low",
+          "dueDate": "2026-08-09",
+          "notes": "Demo operations queue record for operations review; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-006",
+          "state": "queued",
+          "reference": "WARMAN-0006",
+          "subject": "Admin — Customer Request",
+          "owner": "Casey Nguyen",
+          "priority": "Medium",
+          "dueDate": "2026-08-11",
+          "notes": "Demo operations queue record for customer request; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-007",
+          "state": "queued",
+          "reference": "WARMAN-0007",
+          "subject": "Admin — Compliance Check",
+          "owner": "Cameron Diaz",
+          "priority": "High",
+          "dueDate": "2026-08-13",
+          "notes": "Demo operations queue record for compliance check; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-008",
+          "state": "queued",
+          "reference": "WARMAN-0008",
+          "subject": "Admin — Service Window",
+          "owner": "Drew Wilson",
+          "priority": "Critical",
+          "dueDate": "2026-08-15",
+          "notes": "Demo operations queue record for service window; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-009",
+          "state": "queued",
+          "reference": "WARMAN-0009",
+          "subject": "Admin — Quality Sample",
+          "owner": "Emerson Clark",
+          "priority": "Low",
+          "dueDate": "2026-08-17",
+          "notes": "Demo operations queue record for quality sample; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-010",
+          "state": "queued",
+          "reference": "WARMAN-0010",
+          "subject": "Admin — Management Review",
+          "owner": "Hayden Kim",
+          "priority": "Medium",
+          "dueDate": "2026-08-19",
+          "notes": "Demo operations queue record for management review; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-011",
+          "state": "queued",
+          "reference": "WARMAN-0011",
+          "subject": "Admin — Exception Follow-up",
+          "owner": "Jamie Rivera",
+          "priority": "High",
+          "dueDate": "2026-08-21",
+          "notes": "Demo operations queue record for exception follow-up; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-012",
+          "state": "queued",
+          "reference": "WARMAN-0012",
+          "subject": "Admin — Evidence Package",
+          "owner": "Kai Thompson",
+          "priority": "Critical",
+          "dueDate": "2026-08-23",
+          "notes": "Demo operations queue record for evidence package; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-013",
+          "state": "queued",
+          "reference": "WARMAN-0013",
+          "subject": "Admin — Planning Cycle",
+          "owner": "Logan Shah",
+          "priority": "Low",
+          "dueDate": "2026-08-25",
+          "notes": "Demo operations queue record for planning cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-014",
+          "state": "queued",
+          "reference": "WARMAN-0014",
+          "subject": "Admin — Performance Review",
+          "owner": "Parker Evans",
+          "priority": "Medium",
+          "dueDate": "2026-08-27",
+          "notes": "Demo operations queue record for performance review; verify evidence and next action before completion."
+        },
+        {
+          "id": "operations-queue-015",
+          "state": "queued",
+          "reference": "WARMAN-0015",
+          "subject": "Admin — Final Verification",
+          "owner": "Quinn Murphy",
+          "priority": "High",
+          "dueDate": "2026-08-29",
+          "notes": "Demo operations queue record for final verification; verify evidence and next action before completion."
+        }
+      ]
     },
     {
-      "id":"sanctions-screening","title":"Trade Sanctions Screening","description":"Screen shippers, consignees, carriers, routes, countries, and counterparties using explicit test or configured sources.",
-      "fields":[{"key":"shipmentRef","label":"Shipment Reference","type":"text","required":true},{"key":"screeningScope","label":"Screening Scope","type":"select","required":true,"options":["Shipper","Consignee","Carrier","Route","All parties"]},{"key":"provider","label":"Screening Provider","type":"select","required":true,"options":["Local test list","Manual review","Configured provider"]},{"key":"matchThreshold","label":"Match Threshold","type":"number","required":true},{"key":"analyst","label":"Screening Analyst","type":"text","required":true}],
-      "states":["queued","screening","potential-match","cleared","escalated"],"transitions":[{"id":"screen","label":"Run Screening","from":["queued"],"to":"screening"},{"id":"match","label":"Record Potential Match","from":["screening"],"to":"potential-match"},{"id":"clear","label":"Clear Screening","from":["screening","potential-match"],"to":"cleared"},{"id":"escalate","label":"Escalate Match","from":["potential-match"],"to":"escalated"}],
-      "seeds":[{"id":"sanctions-screen-1001","state":"queued","shipmentRef":"SHP-2026-7012","screeningScope":"All parties","provider":"Local test list","matchThreshold":85,"analyst":"Kai Bennett"}]
+      "id": "quality-review",
+      "title": "Admin Panel Quality Review",
+      "description": "Manage quality review for Admin Panel within Warehouse Manager, with explicit ownership, due dates, state transitions, and audit history.",
+      "fields": [
+        {
+          "key": "reference",
+          "label": "Reference",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "subject",
+          "label": "Admin Panel Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "owner",
+          "label": "Owner",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        {
+          "key": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Operational Notes",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "states": [
+        "pending",
+        "reviewing",
+        "changes-required",
+        "verified",
+        "closed"
+      ],
+      "transitions": [
+        {
+          "id": "review",
+          "label": "Begin Review",
+          "from": [
+            "pending"
+          ],
+          "to": "reviewing"
+        },
+        {
+          "id": "request-changes",
+          "label": "Request Changes",
+          "from": [
+            "reviewing"
+          ],
+          "to": "changes-required"
+        },
+        {
+          "id": "verify",
+          "label": "Verify Result",
+          "from": [
+            "reviewing",
+            "changes-required"
+          ],
+          "to": "verified"
+        },
+        {
+          "id": "close",
+          "label": "Close Review",
+          "from": [
+            "verified"
+          ],
+          "to": "closed"
+        }
+      ],
+      "seeds": [
+        {
+          "id": "quality-review-001",
+          "state": "pending",
+          "reference": "WARMAN-0001",
+          "subject": "Admin Panel — North Region",
+          "owner": "Avery Morgan",
+          "priority": "Low",
+          "dueDate": "2026-08-01",
+          "notes": "Demo quality review record for north region; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-002",
+          "state": "pending",
+          "reference": "WARMAN-0002",
+          "subject": "Admin Panel — Enterprise Account",
+          "owner": "Jordan Lee",
+          "priority": "Medium",
+          "dueDate": "2026-08-03",
+          "notes": "Demo quality review record for enterprise account; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-003",
+          "state": "pending",
+          "reference": "WARMAN-0003",
+          "subject": "Admin Panel — Quarterly Cycle",
+          "owner": "Taylor Brooks",
+          "priority": "High",
+          "dueDate": "2026-08-05",
+          "notes": "Demo quality review record for quarterly cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-004",
+          "state": "pending",
+          "reference": "WARMAN-0004",
+          "subject": "Admin Panel — Priority Queue",
+          "owner": "Morgan Chen",
+          "priority": "Critical",
+          "dueDate": "2026-08-07",
+          "notes": "Demo quality review record for priority queue; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-005",
+          "state": "pending",
+          "reference": "WARMAN-0005",
+          "subject": "Admin Panel — Operations Review",
+          "owner": "Riley Patel",
+          "priority": "Low",
+          "dueDate": "2026-08-09",
+          "notes": "Demo quality review record for operations review; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-006",
+          "state": "pending",
+          "reference": "WARMAN-0006",
+          "subject": "Admin Panel — Customer Request",
+          "owner": "Casey Nguyen",
+          "priority": "Medium",
+          "dueDate": "2026-08-11",
+          "notes": "Demo quality review record for customer request; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-007",
+          "state": "pending",
+          "reference": "WARMAN-0007",
+          "subject": "Admin Panel — Compliance Check",
+          "owner": "Cameron Diaz",
+          "priority": "High",
+          "dueDate": "2026-08-13",
+          "notes": "Demo quality review record for compliance check; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-008",
+          "state": "pending",
+          "reference": "WARMAN-0008",
+          "subject": "Admin Panel — Service Window",
+          "owner": "Drew Wilson",
+          "priority": "Critical",
+          "dueDate": "2026-08-15",
+          "notes": "Demo quality review record for service window; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-009",
+          "state": "pending",
+          "reference": "WARMAN-0009",
+          "subject": "Admin Panel — Quality Sample",
+          "owner": "Emerson Clark",
+          "priority": "Low",
+          "dueDate": "2026-08-17",
+          "notes": "Demo quality review record for quality sample; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-010",
+          "state": "pending",
+          "reference": "WARMAN-0010",
+          "subject": "Admin Panel — Management Review",
+          "owner": "Hayden Kim",
+          "priority": "Medium",
+          "dueDate": "2026-08-19",
+          "notes": "Demo quality review record for management review; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-011",
+          "state": "pending",
+          "reference": "WARMAN-0011",
+          "subject": "Admin Panel — Exception Follow-up",
+          "owner": "Jamie Rivera",
+          "priority": "High",
+          "dueDate": "2026-08-21",
+          "notes": "Demo quality review record for exception follow-up; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-012",
+          "state": "pending",
+          "reference": "WARMAN-0012",
+          "subject": "Admin Panel — Evidence Package",
+          "owner": "Kai Thompson",
+          "priority": "Critical",
+          "dueDate": "2026-08-23",
+          "notes": "Demo quality review record for evidence package; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-013",
+          "state": "pending",
+          "reference": "WARMAN-0013",
+          "subject": "Admin Panel — Planning Cycle",
+          "owner": "Logan Shah",
+          "priority": "Low",
+          "dueDate": "2026-08-25",
+          "notes": "Demo quality review record for planning cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-014",
+          "state": "pending",
+          "reference": "WARMAN-0014",
+          "subject": "Admin Panel — Performance Review",
+          "owner": "Parker Evans",
+          "priority": "Medium",
+          "dueDate": "2026-08-27",
+          "notes": "Demo quality review record for performance review; verify evidence and next action before completion."
+        },
+        {
+          "id": "quality-review-015",
+          "state": "pending",
+          "reference": "WARMAN-0015",
+          "subject": "Admin Panel — Final Verification",
+          "owner": "Quinn Murphy",
+          "priority": "High",
+          "dueDate": "2026-08-29",
+          "notes": "Demo quality review record for final verification; verify evidence and next action before completion."
+        }
+      ]
     },
     {
-      "id":"quote-optimization","title":"Freight Quote Optimization","description":"Recommend a quote using lane history, capacity, local spot inputs, margin target, and service commitment.",
-      "fields":[{"key":"quoteRef","label":"Quote Reference","type":"text","required":true},{"key":"lane","label":"Lane","type":"text","required":true},{"key":"costBasis","label":"Estimated Cost","type":"number","required":true},{"key":"targetMarginPct","label":"Target Margin Percent","type":"number","required":true},{"key":"marketSource","label":"Market Source","type":"select","required":true,"options":["Local history","Manual spot input","Configured rate provider"]}],
-      "states":["draft","optimizing","review","approved","rejected","offered"],"transitions":[{"id":"optimize","label":"Optimize Quote","from":["draft"],"to":"optimizing"},{"id":"review","label":"Start Pricing Review","from":["optimizing"],"to":"review"},{"id":"approve","label":"Approve Quote","from":["review"],"to":"approved"},{"id":"reject","label":"Reject Quote","from":["review"],"to":"rejected"},{"id":"offer","label":"Record Customer Offer","from":["approved"],"to":"offered"}],
-      "seeds":[{"id":"quote-run-1001","state":"draft","quoteRef":"QT-2026-3301","lane":"Newark, NJ to Columbus, OH","costBasis":1480,"targetMarginPct":18,"marketSource":"Local history"}]
+      "id": "risk-assessment",
+      "title": "Agent Quote Risk Assessment",
+      "description": "Manage risk assessment for Agent Quote within Warehouse Manager, with explicit ownership, due dates, state transitions, and audit history.",
+      "fields": [
+        {
+          "key": "reference",
+          "label": "Reference",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "subject",
+          "label": "Agent Quote Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "owner",
+          "label": "Owner",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        {
+          "key": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Operational Notes",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "states": [
+        "identified",
+        "assessing",
+        "mitigating",
+        "accepted",
+        "closed"
+      ],
+      "transitions": [
+        {
+          "id": "assess",
+          "label": "Assess Risk",
+          "from": [
+            "identified"
+          ],
+          "to": "assessing"
+        },
+        {
+          "id": "mitigate",
+          "label": "Plan Mitigation",
+          "from": [
+            "assessing"
+          ],
+          "to": "mitigating"
+        },
+        {
+          "id": "accept",
+          "label": "Accept Risk",
+          "from": [
+            "assessing",
+            "mitigating"
+          ],
+          "to": "accepted"
+        },
+        {
+          "id": "close",
+          "label": "Close Risk",
+          "from": [
+            "accepted"
+          ],
+          "to": "closed"
+        }
+      ],
+      "seeds": [
+        {
+          "id": "risk-assessment-001",
+          "state": "identified",
+          "reference": "WARMAN-0001",
+          "subject": "Agent Quote — North Region",
+          "owner": "Avery Morgan",
+          "priority": "Low",
+          "dueDate": "2026-08-01",
+          "notes": "Demo risk assessment record for north region; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-002",
+          "state": "identified",
+          "reference": "WARMAN-0002",
+          "subject": "Agent Quote — Enterprise Account",
+          "owner": "Jordan Lee",
+          "priority": "Medium",
+          "dueDate": "2026-08-03",
+          "notes": "Demo risk assessment record for enterprise account; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-003",
+          "state": "identified",
+          "reference": "WARMAN-0003",
+          "subject": "Agent Quote — Quarterly Cycle",
+          "owner": "Taylor Brooks",
+          "priority": "High",
+          "dueDate": "2026-08-05",
+          "notes": "Demo risk assessment record for quarterly cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-004",
+          "state": "identified",
+          "reference": "WARMAN-0004",
+          "subject": "Agent Quote — Priority Queue",
+          "owner": "Morgan Chen",
+          "priority": "Critical",
+          "dueDate": "2026-08-07",
+          "notes": "Demo risk assessment record for priority queue; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-005",
+          "state": "identified",
+          "reference": "WARMAN-0005",
+          "subject": "Agent Quote — Operations Review",
+          "owner": "Riley Patel",
+          "priority": "Low",
+          "dueDate": "2026-08-09",
+          "notes": "Demo risk assessment record for operations review; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-006",
+          "state": "identified",
+          "reference": "WARMAN-0006",
+          "subject": "Agent Quote — Customer Request",
+          "owner": "Casey Nguyen",
+          "priority": "Medium",
+          "dueDate": "2026-08-11",
+          "notes": "Demo risk assessment record for customer request; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-007",
+          "state": "identified",
+          "reference": "WARMAN-0007",
+          "subject": "Agent Quote — Compliance Check",
+          "owner": "Cameron Diaz",
+          "priority": "High",
+          "dueDate": "2026-08-13",
+          "notes": "Demo risk assessment record for compliance check; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-008",
+          "state": "identified",
+          "reference": "WARMAN-0008",
+          "subject": "Agent Quote — Service Window",
+          "owner": "Drew Wilson",
+          "priority": "Critical",
+          "dueDate": "2026-08-15",
+          "notes": "Demo risk assessment record for service window; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-009",
+          "state": "identified",
+          "reference": "WARMAN-0009",
+          "subject": "Agent Quote — Quality Sample",
+          "owner": "Emerson Clark",
+          "priority": "Low",
+          "dueDate": "2026-08-17",
+          "notes": "Demo risk assessment record for quality sample; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-010",
+          "state": "identified",
+          "reference": "WARMAN-0010",
+          "subject": "Agent Quote — Management Review",
+          "owner": "Hayden Kim",
+          "priority": "Medium",
+          "dueDate": "2026-08-19",
+          "notes": "Demo risk assessment record for management review; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-011",
+          "state": "identified",
+          "reference": "WARMAN-0011",
+          "subject": "Agent Quote — Exception Follow-up",
+          "owner": "Jamie Rivera",
+          "priority": "High",
+          "dueDate": "2026-08-21",
+          "notes": "Demo risk assessment record for exception follow-up; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-012",
+          "state": "identified",
+          "reference": "WARMAN-0012",
+          "subject": "Agent Quote — Evidence Package",
+          "owner": "Kai Thompson",
+          "priority": "Critical",
+          "dueDate": "2026-08-23",
+          "notes": "Demo risk assessment record for evidence package; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-013",
+          "state": "identified",
+          "reference": "WARMAN-0013",
+          "subject": "Agent Quote — Planning Cycle",
+          "owner": "Logan Shah",
+          "priority": "Low",
+          "dueDate": "2026-08-25",
+          "notes": "Demo risk assessment record for planning cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-014",
+          "state": "identified",
+          "reference": "WARMAN-0014",
+          "subject": "Agent Quote — Performance Review",
+          "owner": "Parker Evans",
+          "priority": "Medium",
+          "dueDate": "2026-08-27",
+          "notes": "Demo risk assessment record for performance review; verify evidence and next action before completion."
+        },
+        {
+          "id": "risk-assessment-015",
+          "state": "identified",
+          "reference": "WARMAN-0015",
+          "subject": "Agent Quote — Final Verification",
+          "owner": "Quinn Murphy",
+          "priority": "High",
+          "dueDate": "2026-08-29",
+          "notes": "Demo risk assessment record for final verification; verify evidence and next action before completion."
+        }
+      ]
     },
     {
-      "id":"exception-alerts","title":"Shipment Exception Management","description":"Flag delays, missing documents, capacity changes, customs holds, temperature excursions, and claims risk for action.",
-      "fields":[{"key":"shipmentRef","label":"Shipment Reference","type":"text","required":true},{"key":"exceptionType","label":"Exception Type","type":"select","required":true,"options":["Delay","Missing document","Capacity change","Customs hold","Temperature excursion","Claims risk"]},{"key":"severity","label":"Severity","type":"select","required":true,"options":["Low","Medium","High","Critical"]},{"key":"owner","label":"Exception Owner","type":"text","required":true},{"key":"responseDue","label":"Response Due","type":"date","required":true}],
-      "states":["open","acknowledged","investigating","mitigated","resolved","escalated"],"transitions":[{"id":"acknowledge","label":"Acknowledge Alert","from":["open"],"to":"acknowledged"},{"id":"investigate","label":"Start Investigation","from":["acknowledged"],"to":"investigating"},{"id":"mitigate","label":"Record Mitigation","from":["investigating"],"to":"mitigated"},{"id":"resolve","label":"Resolve Exception","from":["mitigated"],"to":"resolved"},{"id":"escalate","label":"Escalate Exception","from":["acknowledged","investigating"],"to":"escalated"}],
-      "seeds":[{"id":"exception-1001","state":"open","shipmentRef":"SHP-2026-7011","exceptionType":"Delay","severity":"Medium","owner":"Dispatch Team East","responseDue":"2026-07-14"}]
+      "id": "evidence-management",
+      "title": "AI Analysis Evidence Management",
+      "description": "Manage evidence management for AI Analysis within Warehouse Manager, with explicit ownership, due dates, state transitions, and audit history.",
+      "fields": [
+        {
+          "key": "reference",
+          "label": "Reference",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "subject",
+          "label": "AI Analysis Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "owner",
+          "label": "Owner",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        {
+          "key": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Operational Notes",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "states": [
+        "requested",
+        "collected",
+        "reviewing",
+        "verified",
+        "archived"
+      ],
+      "transitions": [
+        {
+          "id": "collect",
+          "label": "Collect Evidence",
+          "from": [
+            "requested"
+          ],
+          "to": "collected"
+        },
+        {
+          "id": "review",
+          "label": "Review Evidence",
+          "from": [
+            "collected"
+          ],
+          "to": "reviewing"
+        },
+        {
+          "id": "verify",
+          "label": "Verify Evidence",
+          "from": [
+            "reviewing"
+          ],
+          "to": "verified"
+        },
+        {
+          "id": "archive",
+          "label": "Archive Evidence",
+          "from": [
+            "verified"
+          ],
+          "to": "archived"
+        }
+      ],
+      "seeds": [
+        {
+          "id": "evidence-management-001",
+          "state": "requested",
+          "reference": "WARMAN-0001",
+          "subject": "AI Analysis — North Region",
+          "owner": "Avery Morgan",
+          "priority": "Low",
+          "dueDate": "2026-08-01",
+          "notes": "Demo evidence management record for north region; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-002",
+          "state": "requested",
+          "reference": "WARMAN-0002",
+          "subject": "AI Analysis — Enterprise Account",
+          "owner": "Jordan Lee",
+          "priority": "Medium",
+          "dueDate": "2026-08-03",
+          "notes": "Demo evidence management record for enterprise account; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-003",
+          "state": "requested",
+          "reference": "WARMAN-0003",
+          "subject": "AI Analysis — Quarterly Cycle",
+          "owner": "Taylor Brooks",
+          "priority": "High",
+          "dueDate": "2026-08-05",
+          "notes": "Demo evidence management record for quarterly cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-004",
+          "state": "requested",
+          "reference": "WARMAN-0004",
+          "subject": "AI Analysis — Priority Queue",
+          "owner": "Morgan Chen",
+          "priority": "Critical",
+          "dueDate": "2026-08-07",
+          "notes": "Demo evidence management record for priority queue; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-005",
+          "state": "requested",
+          "reference": "WARMAN-0005",
+          "subject": "AI Analysis — Operations Review",
+          "owner": "Riley Patel",
+          "priority": "Low",
+          "dueDate": "2026-08-09",
+          "notes": "Demo evidence management record for operations review; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-006",
+          "state": "requested",
+          "reference": "WARMAN-0006",
+          "subject": "AI Analysis — Customer Request",
+          "owner": "Casey Nguyen",
+          "priority": "Medium",
+          "dueDate": "2026-08-11",
+          "notes": "Demo evidence management record for customer request; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-007",
+          "state": "requested",
+          "reference": "WARMAN-0007",
+          "subject": "AI Analysis — Compliance Check",
+          "owner": "Cameron Diaz",
+          "priority": "High",
+          "dueDate": "2026-08-13",
+          "notes": "Demo evidence management record for compliance check; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-008",
+          "state": "requested",
+          "reference": "WARMAN-0008",
+          "subject": "AI Analysis — Service Window",
+          "owner": "Drew Wilson",
+          "priority": "Critical",
+          "dueDate": "2026-08-15",
+          "notes": "Demo evidence management record for service window; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-009",
+          "state": "requested",
+          "reference": "WARMAN-0009",
+          "subject": "AI Analysis — Quality Sample",
+          "owner": "Emerson Clark",
+          "priority": "Low",
+          "dueDate": "2026-08-17",
+          "notes": "Demo evidence management record for quality sample; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-010",
+          "state": "requested",
+          "reference": "WARMAN-0010",
+          "subject": "AI Analysis — Management Review",
+          "owner": "Hayden Kim",
+          "priority": "Medium",
+          "dueDate": "2026-08-19",
+          "notes": "Demo evidence management record for management review; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-011",
+          "state": "requested",
+          "reference": "WARMAN-0011",
+          "subject": "AI Analysis — Exception Follow-up",
+          "owner": "Jamie Rivera",
+          "priority": "High",
+          "dueDate": "2026-08-21",
+          "notes": "Demo evidence management record for exception follow-up; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-012",
+          "state": "requested",
+          "reference": "WARMAN-0012",
+          "subject": "AI Analysis — Evidence Package",
+          "owner": "Kai Thompson",
+          "priority": "Critical",
+          "dueDate": "2026-08-23",
+          "notes": "Demo evidence management record for evidence package; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-013",
+          "state": "requested",
+          "reference": "WARMAN-0013",
+          "subject": "AI Analysis — Planning Cycle",
+          "owner": "Logan Shah",
+          "priority": "Low",
+          "dueDate": "2026-08-25",
+          "notes": "Demo evidence management record for planning cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-014",
+          "state": "requested",
+          "reference": "WARMAN-0014",
+          "subject": "AI Analysis — Performance Review",
+          "owner": "Parker Evans",
+          "priority": "Medium",
+          "dueDate": "2026-08-27",
+          "notes": "Demo evidence management record for performance review; verify evidence and next action before completion."
+        },
+        {
+          "id": "evidence-management-015",
+          "state": "requested",
+          "reference": "WARMAN-0015",
+          "subject": "AI Analysis — Final Verification",
+          "owner": "Quinn Murphy",
+          "priority": "High",
+          "dueDate": "2026-08-29",
+          "notes": "Demo evidence management record for final verification; verify evidence and next action before completion."
+        }
+      ]
     },
     {
-      "id":"cold-chain-compliance","title":"Cold Chain Compliance","description":"Track temperature readings, excursion windows, corrective actions, evidence, and release approval.",
-      "fields":[{"key":"shipmentRef","label":"Shipment Reference","type":"text","required":true},{"key":"minTemperature","label":"Minimum Temperature","type":"number","required":true},{"key":"maxTemperature","label":"Maximum Temperature","type":"number","required":true},{"key":"readingSource","label":"Reading Source","type":"select","required":true,"options":["Local fixture","Manual logger","Configured sensor provider"]},{"key":"complianceOwner","label":"Compliance Owner","type":"text","required":true}],
-      "states":["monitoring","excursion-detected","corrective-action","quality-review","released","quarantined"],"transitions":[{"id":"excursion","label":"Record Excursion","from":["monitoring"],"to":"excursion-detected"},{"id":"correct","label":"Start Corrective Action","from":["excursion-detected"],"to":"corrective-action"},{"id":"review","label":"Request Quality Review","from":["corrective-action"],"to":"quality-review"},{"id":"release","label":"Release Shipment","from":["monitoring","quality-review"],"to":"released"},{"id":"quarantine","label":"Quarantine Shipment","from":["excursion-detected","quality-review"],"to":"quarantined"}],
-      "seeds":[{"id":"cold-chain-1001","state":"monitoring","shipmentRef":"SHP-2026-7020","minTemperature":2,"maxTemperature":8,"readingSource":"Local fixture","complianceOwner":"Cold Chain Quality"}]
+      "id": "exception-resolution",
+      "title": "AI Analyze Exception Resolution",
+      "description": "Manage exception resolution for AI Analyze within Warehouse Manager, with explicit ownership, due dates, state transitions, and audit history.",
+      "fields": [
+        {
+          "key": "reference",
+          "label": "Reference",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "subject",
+          "label": "AI Analyze Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "owner",
+          "label": "Owner",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        {
+          "key": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Operational Notes",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "states": [
+        "open",
+        "investigating",
+        "remediating",
+        "resolved",
+        "waived"
+      ],
+      "transitions": [
+        {
+          "id": "investigate",
+          "label": "Investigate Exception",
+          "from": [
+            "open"
+          ],
+          "to": "investigating"
+        },
+        {
+          "id": "remediate",
+          "label": "Start Remediation",
+          "from": [
+            "investigating"
+          ],
+          "to": "remediating"
+        },
+        {
+          "id": "resolve",
+          "label": "Resolve Exception",
+          "from": [
+            "investigating",
+            "remediating"
+          ],
+          "to": "resolved"
+        },
+        {
+          "id": "waive",
+          "label": "Approve Waiver",
+          "from": [
+            "investigating"
+          ],
+          "to": "waived"
+        }
+      ],
+      "seeds": [
+        {
+          "id": "exception-resolution-001",
+          "state": "open",
+          "reference": "WARMAN-0001",
+          "subject": "AI Analyze — North Region",
+          "owner": "Avery Morgan",
+          "priority": "Low",
+          "dueDate": "2026-08-01",
+          "notes": "Demo exception resolution record for north region; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-002",
+          "state": "open",
+          "reference": "WARMAN-0002",
+          "subject": "AI Analyze — Enterprise Account",
+          "owner": "Jordan Lee",
+          "priority": "Medium",
+          "dueDate": "2026-08-03",
+          "notes": "Demo exception resolution record for enterprise account; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-003",
+          "state": "open",
+          "reference": "WARMAN-0003",
+          "subject": "AI Analyze — Quarterly Cycle",
+          "owner": "Taylor Brooks",
+          "priority": "High",
+          "dueDate": "2026-08-05",
+          "notes": "Demo exception resolution record for quarterly cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-004",
+          "state": "open",
+          "reference": "WARMAN-0004",
+          "subject": "AI Analyze — Priority Queue",
+          "owner": "Morgan Chen",
+          "priority": "Critical",
+          "dueDate": "2026-08-07",
+          "notes": "Demo exception resolution record for priority queue; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-005",
+          "state": "open",
+          "reference": "WARMAN-0005",
+          "subject": "AI Analyze — Operations Review",
+          "owner": "Riley Patel",
+          "priority": "Low",
+          "dueDate": "2026-08-09",
+          "notes": "Demo exception resolution record for operations review; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-006",
+          "state": "open",
+          "reference": "WARMAN-0006",
+          "subject": "AI Analyze — Customer Request",
+          "owner": "Casey Nguyen",
+          "priority": "Medium",
+          "dueDate": "2026-08-11",
+          "notes": "Demo exception resolution record for customer request; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-007",
+          "state": "open",
+          "reference": "WARMAN-0007",
+          "subject": "AI Analyze — Compliance Check",
+          "owner": "Cameron Diaz",
+          "priority": "High",
+          "dueDate": "2026-08-13",
+          "notes": "Demo exception resolution record for compliance check; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-008",
+          "state": "open",
+          "reference": "WARMAN-0008",
+          "subject": "AI Analyze — Service Window",
+          "owner": "Drew Wilson",
+          "priority": "Critical",
+          "dueDate": "2026-08-15",
+          "notes": "Demo exception resolution record for service window; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-009",
+          "state": "open",
+          "reference": "WARMAN-0009",
+          "subject": "AI Analyze — Quality Sample",
+          "owner": "Emerson Clark",
+          "priority": "Low",
+          "dueDate": "2026-08-17",
+          "notes": "Demo exception resolution record for quality sample; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-010",
+          "state": "open",
+          "reference": "WARMAN-0010",
+          "subject": "AI Analyze — Management Review",
+          "owner": "Hayden Kim",
+          "priority": "Medium",
+          "dueDate": "2026-08-19",
+          "notes": "Demo exception resolution record for management review; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-011",
+          "state": "open",
+          "reference": "WARMAN-0011",
+          "subject": "AI Analyze — Exception Follow-up",
+          "owner": "Jamie Rivera",
+          "priority": "High",
+          "dueDate": "2026-08-21",
+          "notes": "Demo exception resolution record for exception follow-up; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-012",
+          "state": "open",
+          "reference": "WARMAN-0012",
+          "subject": "AI Analyze — Evidence Package",
+          "owner": "Kai Thompson",
+          "priority": "Critical",
+          "dueDate": "2026-08-23",
+          "notes": "Demo exception resolution record for evidence package; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-013",
+          "state": "open",
+          "reference": "WARMAN-0013",
+          "subject": "AI Analyze — Planning Cycle",
+          "owner": "Logan Shah",
+          "priority": "Low",
+          "dueDate": "2026-08-25",
+          "notes": "Demo exception resolution record for planning cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-014",
+          "state": "open",
+          "reference": "WARMAN-0014",
+          "subject": "AI Analyze — Performance Review",
+          "owner": "Parker Evans",
+          "priority": "Medium",
+          "dueDate": "2026-08-27",
+          "notes": "Demo exception resolution record for performance review; verify evidence and next action before completion."
+        },
+        {
+          "id": "exception-resolution-015",
+          "state": "open",
+          "reference": "WARMAN-0015",
+          "subject": "AI Analyze — Final Verification",
+          "owner": "Quinn Murphy",
+          "priority": "High",
+          "dueDate": "2026-08-29",
+          "notes": "Demo exception resolution record for final verification; verify evidence and next action before completion."
+        }
+      ]
     },
     {
-      "id":"carrier-performance","title":"Carrier Performance Scorecard","description":"Measure on-time pickup and delivery, claims, communication, rate reliability, and compliance for a defined period.",
-      "fields":[{"key":"carrierRef","label":"Carrier Reference","type":"text","required":true},{"key":"period","label":"Measurement Period","type":"text","required":true},{"key":"laneScope","label":"Lane Scope","type":"text","required":true},{"key":"minimumLoads","label":"Minimum Load Count","type":"number","required":true},{"key":"reviewOwner","label":"Review Owner","type":"text","required":true}],
-      "states":["configured","calculating","review","published","disputed"],"transitions":[{"id":"calculate","label":"Calculate Metrics","from":["configured"],"to":"calculating"},{"id":"review","label":"Review Scorecard","from":["calculating"],"to":"review"},{"id":"publish","label":"Publish Scorecard","from":["review"],"to":"published"},{"id":"dispute","label":"Record Dispute","from":["review","published"],"to":"disputed"},{"id":"recalculate","label":"Recalculate","from":["disputed"],"to":"calculating"}],
-      "seeds":[{"id":"carrier-score-1001","state":"configured","carrierRef":"CAR-1042","period":"2026 Q2","laneScope":"US Northeast and Midwest","minimumLoads":10,"reviewOwner":"Carrier Management"}]
+      "id": "approval-control",
+      "title": "AI Client Preference Learning From Past Design Choices Approval Control",
+      "description": "Manage approval control for AI Client Preference Learning From Past Design Choices within Warehouse Manager, with explicit ownership, due dates, state transitions, and audit history.",
+      "fields": [
+        {
+          "key": "reference",
+          "label": "Reference",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "subject",
+          "label": "AI Client Preference Learning From Past Design Choices Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "owner",
+          "label": "Owner",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        {
+          "key": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Operational Notes",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "states": [
+        "prepared",
+        "submitted",
+        "reviewing",
+        "approved",
+        "declined"
+      ],
+      "transitions": [
+        {
+          "id": "submit",
+          "label": "Submit for Approval",
+          "from": [
+            "prepared"
+          ],
+          "to": "submitted"
+        },
+        {
+          "id": "review",
+          "label": "Begin Approval Review",
+          "from": [
+            "submitted"
+          ],
+          "to": "reviewing"
+        },
+        {
+          "id": "approve",
+          "label": "Approve",
+          "from": [
+            "reviewing"
+          ],
+          "to": "approved"
+        },
+        {
+          "id": "decline",
+          "label": "Decline",
+          "from": [
+            "submitted",
+            "reviewing"
+          ],
+          "to": "declined"
+        }
+      ],
+      "seeds": [
+        {
+          "id": "approval-control-001",
+          "state": "prepared",
+          "reference": "WARMAN-0001",
+          "subject": "AI Client Preference Learning From Past Design Choices — North Region",
+          "owner": "Avery Morgan",
+          "priority": "Low",
+          "dueDate": "2026-08-01",
+          "notes": "Demo approval control record for north region; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-002",
+          "state": "prepared",
+          "reference": "WARMAN-0002",
+          "subject": "AI Client Preference Learning From Past Design Choices — Enterprise Account",
+          "owner": "Jordan Lee",
+          "priority": "Medium",
+          "dueDate": "2026-08-03",
+          "notes": "Demo approval control record for enterprise account; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-003",
+          "state": "prepared",
+          "reference": "WARMAN-0003",
+          "subject": "AI Client Preference Learning From Past Design Choices — Quarterly Cycle",
+          "owner": "Taylor Brooks",
+          "priority": "High",
+          "dueDate": "2026-08-05",
+          "notes": "Demo approval control record for quarterly cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-004",
+          "state": "prepared",
+          "reference": "WARMAN-0004",
+          "subject": "AI Client Preference Learning From Past Design Choices — Priority Queue",
+          "owner": "Morgan Chen",
+          "priority": "Critical",
+          "dueDate": "2026-08-07",
+          "notes": "Demo approval control record for priority queue; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-005",
+          "state": "prepared",
+          "reference": "WARMAN-0005",
+          "subject": "AI Client Preference Learning From Past Design Choices — Operations Review",
+          "owner": "Riley Patel",
+          "priority": "Low",
+          "dueDate": "2026-08-09",
+          "notes": "Demo approval control record for operations review; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-006",
+          "state": "prepared",
+          "reference": "WARMAN-0006",
+          "subject": "AI Client Preference Learning From Past Design Choices — Customer Request",
+          "owner": "Casey Nguyen",
+          "priority": "Medium",
+          "dueDate": "2026-08-11",
+          "notes": "Demo approval control record for customer request; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-007",
+          "state": "prepared",
+          "reference": "WARMAN-0007",
+          "subject": "AI Client Preference Learning From Past Design Choices — Compliance Check",
+          "owner": "Cameron Diaz",
+          "priority": "High",
+          "dueDate": "2026-08-13",
+          "notes": "Demo approval control record for compliance check; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-008",
+          "state": "prepared",
+          "reference": "WARMAN-0008",
+          "subject": "AI Client Preference Learning From Past Design Choices — Service Window",
+          "owner": "Drew Wilson",
+          "priority": "Critical",
+          "dueDate": "2026-08-15",
+          "notes": "Demo approval control record for service window; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-009",
+          "state": "prepared",
+          "reference": "WARMAN-0009",
+          "subject": "AI Client Preference Learning From Past Design Choices — Quality Sample",
+          "owner": "Emerson Clark",
+          "priority": "Low",
+          "dueDate": "2026-08-17",
+          "notes": "Demo approval control record for quality sample; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-010",
+          "state": "prepared",
+          "reference": "WARMAN-0010",
+          "subject": "AI Client Preference Learning From Past Design Choices — Management Review",
+          "owner": "Hayden Kim",
+          "priority": "Medium",
+          "dueDate": "2026-08-19",
+          "notes": "Demo approval control record for management review; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-011",
+          "state": "prepared",
+          "reference": "WARMAN-0011",
+          "subject": "AI Client Preference Learning From Past Design Choices — Exception Follow-up",
+          "owner": "Jamie Rivera",
+          "priority": "High",
+          "dueDate": "2026-08-21",
+          "notes": "Demo approval control record for exception follow-up; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-012",
+          "state": "prepared",
+          "reference": "WARMAN-0012",
+          "subject": "AI Client Preference Learning From Past Design Choices — Evidence Package",
+          "owner": "Kai Thompson",
+          "priority": "Critical",
+          "dueDate": "2026-08-23",
+          "notes": "Demo approval control record for evidence package; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-013",
+          "state": "prepared",
+          "reference": "WARMAN-0013",
+          "subject": "AI Client Preference Learning From Past Design Choices — Planning Cycle",
+          "owner": "Logan Shah",
+          "priority": "Low",
+          "dueDate": "2026-08-25",
+          "notes": "Demo approval control record for planning cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-014",
+          "state": "prepared",
+          "reference": "WARMAN-0014",
+          "subject": "AI Client Preference Learning From Past Design Choices — Performance Review",
+          "owner": "Parker Evans",
+          "priority": "Medium",
+          "dueDate": "2026-08-27",
+          "notes": "Demo approval control record for performance review; verify evidence and next action before completion."
+        },
+        {
+          "id": "approval-control-015",
+          "state": "prepared",
+          "reference": "WARMAN-0015",
+          "subject": "AI Client Preference Learning From Past Design Choices — Final Verification",
+          "owner": "Quinn Murphy",
+          "priority": "High",
+          "dueDate": "2026-08-29",
+          "notes": "Demo approval control record for final verification; verify evidence and next action before completion."
+        }
+      ]
     },
     {
-      "id":"landed-cost","title":"Landed Cost Calculation","description":"Calculate freight, duties, taxes, accessorials, detention, insurance, and margin with reviewable components.",
-      "fields":[{"key":"calculationRef","label":"Calculation Reference","type":"text","required":true},{"key":"shipmentRef","label":"Shipment Reference","type":"text","required":true},{"key":"goodsValue","label":"Goods Value","type":"number","required":true},{"key":"currency","label":"Currency","type":"select","required":true,"options":["USD","CAD","EUR","GBP"]},{"key":"dutySource","label":"Duty Source","type":"select","required":true,"options":["Local tariff table","Manual input","Configured customs provider"]}],
-      "states":["draft","calculating","review","approved","revised"],"transitions":[{"id":"calculate","label":"Calculate Cost","from":["draft","revised"],"to":"calculating"},{"id":"review","label":"Review Components","from":["calculating"],"to":"review"},{"id":"approve","label":"Approve Calculation","from":["review"],"to":"approved"},{"id":"revise","label":"Revise Inputs","from":["review"],"to":"revised"}],
-      "seeds":[{"id":"landed-cost-1001","state":"draft","calculationRef":"LC-2026-451","shipmentRef":"SHP-2026-7012","goodsValue":42000,"currency":"USD","dutySource":"Local tariff table"}]
+      "id": "performance-reporting",
+      "title": "AI Client Preference Learning From Past Design Choices Gap AI Performance Reporting",
+      "description": "Manage performance reporting for AI Client Preference Learning From Past Design Choices Gap AI within Warehouse Manager, with explicit ownership, due dates, state transitions, and audit history.",
+      "fields": [
+        {
+          "key": "reference",
+          "label": "Reference",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "subject",
+          "label": "AI Client Preference Learning From Past Design Choices Gap AI Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "owner",
+          "label": "Owner",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Low",
+            "Medium",
+            "High",
+            "Critical"
+          ]
+        },
+        {
+          "key": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "notes",
+          "label": "Operational Notes",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "states": [
+        "requested",
+        "preparing",
+        "ready",
+        "delivered",
+        "failed"
+      ],
+      "transitions": [
+        {
+          "id": "prepare",
+          "label": "Prepare Report",
+          "from": [
+            "requested",
+            "failed"
+          ],
+          "to": "preparing"
+        },
+        {
+          "id": "ready",
+          "label": "Mark Ready",
+          "from": [
+            "preparing"
+          ],
+          "to": "ready"
+        },
+        {
+          "id": "deliver",
+          "label": "Record Delivery",
+          "from": [
+            "ready"
+          ],
+          "to": "delivered"
+        },
+        {
+          "id": "fail",
+          "label": "Record Failure",
+          "from": [
+            "preparing"
+          ],
+          "to": "failed"
+        }
+      ],
+      "seeds": [
+        {
+          "id": "performance-reporting-001",
+          "state": "requested",
+          "reference": "WARMAN-0001",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — North Region",
+          "owner": "Avery Morgan",
+          "priority": "Low",
+          "dueDate": "2026-08-01",
+          "notes": "Demo performance reporting record for north region; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-002",
+          "state": "requested",
+          "reference": "WARMAN-0002",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Enterprise Account",
+          "owner": "Jordan Lee",
+          "priority": "Medium",
+          "dueDate": "2026-08-03",
+          "notes": "Demo performance reporting record for enterprise account; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-003",
+          "state": "requested",
+          "reference": "WARMAN-0003",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Quarterly Cycle",
+          "owner": "Taylor Brooks",
+          "priority": "High",
+          "dueDate": "2026-08-05",
+          "notes": "Demo performance reporting record for quarterly cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-004",
+          "state": "requested",
+          "reference": "WARMAN-0004",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Priority Queue",
+          "owner": "Morgan Chen",
+          "priority": "Critical",
+          "dueDate": "2026-08-07",
+          "notes": "Demo performance reporting record for priority queue; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-005",
+          "state": "requested",
+          "reference": "WARMAN-0005",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Operations Review",
+          "owner": "Riley Patel",
+          "priority": "Low",
+          "dueDate": "2026-08-09",
+          "notes": "Demo performance reporting record for operations review; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-006",
+          "state": "requested",
+          "reference": "WARMAN-0006",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Customer Request",
+          "owner": "Casey Nguyen",
+          "priority": "Medium",
+          "dueDate": "2026-08-11",
+          "notes": "Demo performance reporting record for customer request; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-007",
+          "state": "requested",
+          "reference": "WARMAN-0007",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Compliance Check",
+          "owner": "Cameron Diaz",
+          "priority": "High",
+          "dueDate": "2026-08-13",
+          "notes": "Demo performance reporting record for compliance check; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-008",
+          "state": "requested",
+          "reference": "WARMAN-0008",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Service Window",
+          "owner": "Drew Wilson",
+          "priority": "Critical",
+          "dueDate": "2026-08-15",
+          "notes": "Demo performance reporting record for service window; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-009",
+          "state": "requested",
+          "reference": "WARMAN-0009",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Quality Sample",
+          "owner": "Emerson Clark",
+          "priority": "Low",
+          "dueDate": "2026-08-17",
+          "notes": "Demo performance reporting record for quality sample; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-010",
+          "state": "requested",
+          "reference": "WARMAN-0010",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Management Review",
+          "owner": "Hayden Kim",
+          "priority": "Medium",
+          "dueDate": "2026-08-19",
+          "notes": "Demo performance reporting record for management review; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-011",
+          "state": "requested",
+          "reference": "WARMAN-0011",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Exception Follow-up",
+          "owner": "Jamie Rivera",
+          "priority": "High",
+          "dueDate": "2026-08-21",
+          "notes": "Demo performance reporting record for exception follow-up; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-012",
+          "state": "requested",
+          "reference": "WARMAN-0012",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Evidence Package",
+          "owner": "Kai Thompson",
+          "priority": "Critical",
+          "dueDate": "2026-08-23",
+          "notes": "Demo performance reporting record for evidence package; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-013",
+          "state": "requested",
+          "reference": "WARMAN-0013",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Planning Cycle",
+          "owner": "Logan Shah",
+          "priority": "Low",
+          "dueDate": "2026-08-25",
+          "notes": "Demo performance reporting record for planning cycle; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-014",
+          "state": "requested",
+          "reference": "WARMAN-0014",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Performance Review",
+          "owner": "Parker Evans",
+          "priority": "Medium",
+          "dueDate": "2026-08-27",
+          "notes": "Demo performance reporting record for performance review; verify evidence and next action before completion."
+        },
+        {
+          "id": "performance-reporting-015",
+          "state": "requested",
+          "reference": "WARMAN-0015",
+          "subject": "AI Client Preference Learning From Past Design Choices Gap AI — Final Verification",
+          "owner": "Quinn Murphy",
+          "priority": "High",
+          "dueDate": "2026-08-29",
+          "notes": "Demo performance reporting record for final verification; verify evidence and next action before completion."
+        }
+      ]
     }
   ],
-  "resources":[
-    {"name":"shipment_intake_batches","type":"table","workflowId":"shipment-intake"},{"name":"shipment_intake_items","type":"table","workflowId":"shipment-intake"},
-    {"name":"customs_document_checks","type":"table","workflowId":"customs-document-check"},{"name":"customs_findings","type":"table","workflowId":"customs-document-check"},
-    {"name":"sanctions_screenings","type":"table","workflowId":"sanctions-screening"},{"name":"sanctions_matches","type":"table","workflowId":"sanctions-screening"},
-    {"name":"quote_optimization_runs","type":"table","workflowId":"quote-optimization"},{"name":"quote_recommendations","type":"table","workflowId":"quote-optimization"},
-    {"name":"shipment_exceptions","type":"table","workflowId":"exception-alerts"},{"name":"exception_events","type":"table","workflowId":"exception-alerts"},
-    {"name":"cold_chain_readings","type":"table","workflowId":"cold-chain-compliance"},{"name":"temperature_excursions","type":"table","workflowId":"cold-chain-compliance"},{"name":"cold_chain_evidence","type":"table","workflowId":"cold-chain-compliance"},
-    {"name":"carrier_performance_metrics","type":"view","workflowId":"carrier-performance"},{"name":"lane_carrier_scorecards","type":"view","workflowId":"carrier-performance"},
-    {"name":"landed_cost_calculations","type":"table","workflowId":"landed-cost"},{"name":"landed_cost_components","type":"table","workflowId":"landed-cost"}
-  ]
+  "resources": []
 }

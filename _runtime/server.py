@@ -6,11 +6,16 @@ from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from exposure_policy import validate_bind_host
 from workflow_engine import WorkflowEngine, WorkflowError, render_workflow_ui
 
 APP_ROOT = Path(os.environ.get("MERGED_APP_ROOT", os.getcwd()))
 DB_PATH = APP_ROOT / "database.sqlite"
 MANIFEST = json.loads((APP_ROOT / "manifest.json").read_text())
+PORT = int(os.environ.get("PORT", "4400"))
+HOST = os.environ.get("MERGED_HOST", "127.0.0.1")
+validate_bind_host(HOST, os.environ)
+
 PLACEHOLDER_ENV_MARKERS = ("your_", "your-", "replace", "placeholder", "changeme", "example", "xxxx")
 
 def load_env_file(path):
@@ -209,6 +214,12 @@ def preferred_route(row, route_counts):
 def navigation_links(items, selected, route_counts):
     return "".join(f'<a class="nav-item {"active" if selected and row["id"]==selected["id"] else ""}" href="{html.escape(preferred_route(row,route_counts))}"><span>{html.escape(row["name"])}</span><small>{"AI" if row["ai_route"] else row["evidence_count"]}</small></a>' for row in items)
 
+def route_matches(route, request_path, request_query):
+    parsed=urlparse(route)
+    if parsed.path!=request_path: return False
+    expected=parse_qs(parsed.query,keep_blank_values=True)
+    return all(request_query.get(key,[])==values for key,values in expected.items())
+
 def source_overview_html(source_row,feature_rows,route_counts):
     feature_links="".join(f'<li><a href="{html.escape(preferred_route(feature,route_counts))}">{html.escape(feature["name"])}</a> <small>{"AI feature" if feature["ai_route"] else html.escape(feature["tier"]+" feature")}</small></li>' for feature in feature_rows)
     if not feature_links: feature_links='<li>No user-facing features are assigned to this source app.</li>'
@@ -245,10 +256,10 @@ def render(query, request_path="/"):
         if candidate: route_counts[candidate]=route_counts.get(candidate,0)+1
     selected=None
     if request_path!="/":
-        route_page=rows("SELECT feature_id FROM ai_pages WHERE route=?",(request_path,));
-        if route_page and route_page[0]["feature_id"]: feature_id=str(route_page[0]["feature_id"])
-        elif not route_page:
-            route_feature=next((row for row in feature_rows if request_path in json.loads(row.get("routes_json") or "[]")),None)
+        route_page=next((page for page in rows("SELECT feature_id,route FROM ai_pages ORDER BY id") if route_matches(page["route"],request_path,query)),None)
+        if route_page and route_page["feature_id"]: feature_id=str(route_page["feature_id"])
+        else:
+            route_feature=next((row for row in feature_rows if any(route_matches(route,request_path,query) for route in json.loads(row.get("routes_json") or "[]"))),None)
             if route_feature: feature_id=str(route_feature["id"])
     if feature_id.isdigit():
         found=rows("SELECT features.*,ai_pages.route AS ai_route,feature_navigation.tier,feature_navigation.priority FROM features LEFT JOIN ai_pages ON ai_pages.feature_id=features.id JOIN feature_navigation ON feature_navigation.feature_id=features.id WHERE features.id=? AND "+visibility_rule,(int(feature_id),)); selected=found[0] if found else None

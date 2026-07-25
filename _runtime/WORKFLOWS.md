@@ -69,5 +69,5 @@ List endpoints support `state`, `q`, `limit`, `offset`, and
 ## Tests
 
 ```sh
-python3 -m unittest discover -s merged/_runtime/tests -v
+python3 -m unittest discover -s _runtime/tests -v
 ```
